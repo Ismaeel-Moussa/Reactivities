@@ -7,32 +7,33 @@ import {
   Button,
 } from "@mui/material";
 import type { FormEvent } from "react";
+import { useActivities } from "../../../lib/hooks/useActivities";
 
 type Props = {
   closeForm: () => void;
   activity?: Activity;
-  submitForm: (activity: Activity) => void;
 };
 
-export default function ActivityForm({
-  closeForm,
-  activity,
-  submitForm,
-}: Props) {
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+export default function ActivityForm({ closeForm, activity }: Props) {
+  const { updateActivities, createActivities } = useActivities();
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data: { [key: string]: FormDataEntryValue } = {};
     formData.forEach((value, key) => {
       data[key] = value;
     });
 
-    if (activity) data.id = activity.id;
-    console.log(data);
-
-    submitForm(data as unknown as Activity);
-  }
+    if (activity) {
+      data.id = activity.id;
+      await updateActivities.mutateAsync(data as unknown as Activity);
+      closeForm();
+    } else {
+      await createActivities.mutateAsync(data as unknown as Activity);
+      closeForm();
+    }
+  };
 
   return (
     <Paper sx={{ p: 4, borderRadius: 2, boxShadow: 3 }}>
@@ -54,7 +55,7 @@ export default function ActivityForm({
             fullWidth
             label="Title"
             name="title"
-            value={activity?.title}
+            defaultValue={activity?.title}
           />
           <TextField
             fullWidth
@@ -62,37 +63,47 @@ export default function ActivityForm({
             rows={4}
             label="Description"
             name="description"
-            value={activity?.description}
+            defaultValue={activity?.description}
           />
           <TextField
             fullWidth
             label="Category"
             name="category"
-            value={activity?.category}
+            defaultValue={activity?.category}
           />
           <TextField
             fullWidth
             name="date"
             type="date"
-            value={activity?.date.split("T")[0]}
+            defaultValue={
+              activity?.date
+                ? new Date(activity?.date).toISOString().split("T")[0]
+                : new Date().toISOString().split("T")[0]
+            }
           />
           <TextField
             fullWidth
             label="City"
             name="city"
-            value={activity?.city}
+            defaultValue={activity?.city}
           />
           <TextField
             fullWidth
             label="Venue"
             name="venue"
-            value={activity?.venue}
+            defaultValue={activity?.venue}
           />
           <Stack direction="row" spacing={2} justifyContent="flex-end">
             <Button onClick={closeForm} variant="outlined" color="inherit">
               Cancel
             </Button>
-            <Button type="submit" variant="contained">
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={
+                updateActivities.isPending || createActivities.isPending
+              }
+            >
               Submit
             </Button>
           </Stack>

@@ -12,6 +12,7 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useActivities } from "../../lib/hooks/useActivities";
 
 type Activity = {
   id: string;
@@ -27,16 +28,20 @@ type Activity = {
 };
 
 type Props = {
-  activity: Activity;
+  selectedActivity: Activity;
   cancelSelectActivity: () => void;
   openForm: (id: string) => void;
 };
 
 export default function ActivityDetails({
-  activity,
+  selectedActivity,
   cancelSelectActivity,
   openForm,
 }: Props) {
+  const { activities } = useActivities();
+  const activity = activities?.find((x) => x.id === selectedActivity.id);
+  if (!activity) return <Typography>Loading...</Typography>;
+
   return (
     <Grid>
       <Card>
