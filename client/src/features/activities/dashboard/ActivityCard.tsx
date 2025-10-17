@@ -1,83 +1,115 @@
 import {
   Button,
   Card,
-  CardActions,
   CardContent,
   Typography,
   Chip,
   Box,
+  CardHeader,
+  Avatar,
+  Divider,
+  Stack,
+  CardActions,
 } from "@mui/material";
-import EventIcon from "@mui/icons-material/Event";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { useActivities } from "../../../lib/hooks/useActivities";
 import { Link } from "react-router";
+import { AccessTime, Place } from "@mui/icons-material";
+import { formatDate } from "../../../lib/util/util";
 
 type Props = {
   activity: Activity;
 };
 
 export default function ActivityCard({ activity }: Props) {
-  const { deleteActivity } = useActivities();
+  const isHost = false;
+  const isGoing = false;
+  const isCancelled = false;
+
+  const getStatusChip = () => {
+    if (isCancelled) {
+      return <Chip label="Cancelled" color="error" variant="outlined" />;
+    }
+    if (isHost) {
+      return <Chip label="You are hosting" color="secondary" />;
+    }
+    if (isGoing) {
+      return <Chip label="You are going" color="success" />;
+    }
+    return null;
+  };
+
   return (
-    <Card sx={{ mb: 3, borderRadius: 2, boxShadow: 3 }}>
-      <CardContent>
-        <Typography
-          variant="h5"
-          gutterBottom
-          sx={{ color: "primary.main", fontWeight: "bold" }}
-        >
-          {activity.title}
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            color: "text.secondary",
-            mb: 1.5,
-          }}
-        >
-          <EventIcon sx={{ mr: 1, fontSize: "1rem" }} />
-          <Typography variant="body2">
-            {new Date(activity.date).toDateString()}
+    <Card elevation={2} sx={{ mb: 3, borderRadius: 3 }}>
+      <CardHeader
+        avatar={
+          <Avatar
+            sx={{ width: 60, height: 60 }}
+            src={`/images/user.png`}
+            alt="Host Avatar"
+          />
+        }
+        action={getStatusChip()}
+        title={
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            {activity.title}
           </Typography>
-        </Box>
-        <Typography variant="body1" sx={{ mb: 1.5 }}>
-          {activity.description}
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            color: "text.secondary",
-          }}
+        }
+        subheader={
+          <>
+            Hosted by{" "}
+            <Link
+              to={`/profiles/bob`}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <strong>Bob</strong>
+            </Link>
+          </>
+        }
+      />
+      <CardContent sx={{ pt: 0 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={1}
+          sx={{ color: "text.secondary", mb: 2 }}
         >
-          <LocationOnIcon sx={{ mr: 1, fontSize: "1.2rem" }} />
+          <Box display={"flex"} alignItems={"center"} gap={0.5} flexGrow={0}>
+            <AccessTime sx={{ fontSize: "1rem" }} />
+            <Typography variant="body2" noWrap>
+              {formatDate(activity.date)}
+            </Typography>
+          </Box>
+
+          <Place sx={{ fontSize: "1rem", ml: 2 }} />
           <Typography variant="body2">
             {activity.venue}, {activity.city}
           </Typography>
+        </Stack>
+
+        <Box sx={{ bgcolor: "grey.100", p: 2, borderRadius: 2 }}>
+          <Typography variant="body2">Attendees go here</Typography>
         </Box>
       </CardContent>
-      <CardActions sx={{ justifyContent: "space-between", p: 2 }}>
-        <Chip label={activity.category} variant="outlined" />
-        <Box display="flex" gap={1}>
-          <Button
-            onClick={() => deleteActivity.mutate(activity.id)}
-            disabled={deleteActivity.isPending}
-            size="small"
-            variant="contained"
-            color="error"
-          >
-            Delete
-          </Button>
-          <Button
-            component={Link}
-            to={`/activities/${activity.id}`}
-            size="small"
-            variant="contained"
-          >
-            View
-          </Button>
-        </Box>
+      <Divider />
+      <CardActions
+        sx={{
+          justifyContent: "space-between",
+          alignItems: "center",
+          p: 2,
+        }}
+      >
+        <Stack spacing={1} direction="row" alignItems="center">
+          <Typography variant="body2">{activity.description}</Typography>
+          <Chip label={activity.category} variant="outlined" color="default" />
+        </Stack>
+        <Button
+          component={Link}
+          to={`/activities/${activity.id}`}
+          size="small"
+          variant="contained"
+          sx={{ borderRadius: 2, boxShadow: "none" }}
+        >
+          View
+        </Button>
       </CardActions>
     </Card>
   );
