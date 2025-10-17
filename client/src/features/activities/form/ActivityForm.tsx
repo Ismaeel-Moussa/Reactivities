@@ -8,14 +8,14 @@ import {
 } from "@mui/material";
 import type { FormEvent } from "react";
 import { useActivities } from "../../../lib/hooks/useActivities";
+import { useNavigate, useParams } from "react-router";
 
-type Props = {
-  closeForm: () => void;
-  activity?: Activity;
-};
+export default function ActivityForm() {
+  const { id } = useParams();
+  const { updateActivities, createActivities, activity, isLoadingActivity } =
+    useActivities(id);
 
-export default function ActivityForm({ closeForm, activity }: Props) {
-  const { updateActivities, createActivities } = useActivities();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,12 +28,17 @@ export default function ActivityForm({ closeForm, activity }: Props) {
     if (activity) {
       data.id = activity.id;
       await updateActivities.mutateAsync(data as unknown as Activity);
-      closeForm();
+      navigate(`/activities/${activity.id}`);
     } else {
-      await createActivities.mutateAsync(data as unknown as Activity);
-      closeForm();
+      createActivities.mutate(data as unknown as Activity, {
+        onSuccess: (id) => {
+          navigate(`/activities/${id}`);
+        },
+      });
     }
   };
+
+  if (isLoadingActivity) return <Typography>Loading activity...</Typography>;
 
   return (
     <Paper sx={{ p: 4, borderRadius: 2, boxShadow: 3 }}>
@@ -48,7 +53,7 @@ export default function ActivityForm({ closeForm, activity }: Props) {
           component="h2"
           sx={{ mb: 3, fontWeight: "bold", color: "primary.main" }}
         >
-          Create Activity
+          {activity ? "Edit Activity" : "Create Activity"}
         </Typography>
         <Stack spacing={3}>
           <TextField
@@ -94,7 +99,7 @@ export default function ActivityForm({ closeForm, activity }: Props) {
             defaultValue={activity?.venue}
           />
           <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Button onClick={closeForm} variant="outlined" color="inherit">
+            <Button onClick={() => {}} variant="outlined" color="inherit">
               Cancel
             </Button>
             <Button

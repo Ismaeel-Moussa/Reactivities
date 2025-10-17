@@ -12,43 +12,23 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { useActivities } from "../../lib/hooks/useActivities";
+import { Link, useNavigate, useParams } from "react-router";
+import { useActivities } from "../../../lib/hooks/useActivities";
 
-type Activity = {
-  id: string;
-  title: string;
-  date: string;
-  description: string;
-  category: string;
-  isCancelled: boolean;
-  city: string;
-  venue: string;
-  latitude: number;
-  longitude: number;
-};
+export default function ActivityDetails() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { activity, isLoadingActivity } = useActivities(id);
 
-type Props = {
-  selectedActivity: Activity;
-  cancelSelectActivity: () => void;
-  openForm: (id: string) => void;
-};
-
-export default function ActivityDetails({
-  selectedActivity,
-  cancelSelectActivity,
-  openForm,
-}: Props) {
-  const { activities } = useActivities();
-  const activity = activities?.find((x) => x.id === selectedActivity.id);
-  if (!activity) return <Typography>Loading...</Typography>;
+  if (isLoadingActivity) return <Typography>Loading...</Typography>;
+  if (!activity) return <Typography>Activity not found</Typography>;
 
   return (
     <Grid>
       <Card>
         <CardMedia
           component="img"
-          height="300"
-          image={`../../../public/images/categoryImages/${activity.category}.jpg`}
+          image={`/images/categoryImages/${activity.category}.jpg`}
           alt={activity.title}
         />
         <CardContent>
@@ -68,10 +48,19 @@ export default function ActivityDetails({
               {activity.title}
             </Typography>
             <Stack direction="row" spacing={1}>
-              <Button onClick={() => openForm(activity.id)} variant="outlined">
+              <Button
+                component={Link}
+                to={`/manage/${activity.id}`}
+                variant="outlined"
+                color="primary"
+              >
                 Edit
               </Button>
-              <Button onClick={cancelSelectActivity} variant="outlined">
+              <Button
+                onClick={() => navigate("/activities")}
+                variant="outlined"
+                color="inherit"
+              >
                 Cancel
               </Button>
             </Stack>
