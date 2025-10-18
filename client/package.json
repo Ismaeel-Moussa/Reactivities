@@ -20,6 +20,8 @@
     "axios": "^1.12.2",
     "data-fns": "^1.1.0",
     "date-fns": "^4.1.0",
+    "mobx": "^6.15.0",
+    "mobx-react-lite": "^4.1.1",
     "react": "^19.1.1",
     "react-calendar": "^6.0.0",
     "react-dom": "^19.1.1",
