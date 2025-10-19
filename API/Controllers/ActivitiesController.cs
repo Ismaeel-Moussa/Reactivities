@@ -2,6 +2,7 @@
 using Application.Activities.Queries;
 using Domain;
 using Application.Activities.Commands;
+using Application.Activities.DTOs;
 
 namespace API.Controllers
 {
@@ -16,27 +17,25 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> GetActivity(string id)
         {
-            return await Mediator.Send(new GetActivityDetails.Query { Id = id });
+            return HandleResult(await Mediator.Send(new GetActivity.Query { Id = id }));
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> CreateActivity(Activity activity)
+        public async Task<ActionResult<string>> CreateActivity(CreateActivityDto createActivityDto)
         {
-            return await Mediator.Send(new CreateActivity.Command { Activity = activity });
+            return HandleResult(await Mediator.Send(new CreateActivity.Command { CreateActivityDto = createActivityDto }));
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateActivity(Activity activity)
+        public async Task<ActionResult> UpdateActivity(UpdateActivityDto updateActivityDto)
         {
-            await Mediator.Send(new UpdateActivity.Command { Activity = activity });
-            return NoContent();
+            return HandleResult(await Mediator.Send(new UpdateActivity.Command { UpdateActivityDto = updateActivityDto }));     
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteActivity(string id)
-        {
-            await Mediator.Send(new DeleteActivity.Command { Id = id });
-            return Ok();
+        {      
+            return HandleResult(await Mediator.Send(new DeleteActivity.Command { Id = id }));
         }
 
         
