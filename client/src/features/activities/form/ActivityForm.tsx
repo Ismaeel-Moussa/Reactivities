@@ -1,38 +1,74 @@
+import { Box, Button, Paper, Typography } from '@mui/material';
+import { useActivities } from '../../../lib/hooks/useActivities';
+import { useNavigate, useParams } from 'react-router';
+import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 import {
-  Paper,
-  Box,
-  Typography,
-  TextField,
-  Stack,
-  Button,
-} from "@mui/material";
-import type { FormEvent } from "react";
-import { useActivities } from "../../../lib/hooks/useActivities";
-import { useNavigate, useParams } from "react-router";
+  activitySchema,
+  type ActivitySchema,
+} from '../../../lib/schemas/activitySchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import TextInput from '../../../app/shared/components/TextInput';
+import SelectInput from '../../../app/shared/components/SelectInput';
+import { categoryOptions } from './categoryOptions';
+import DateTimeInput from '../../../app/shared/components/DateTimeInput';
+import LocationInput from '../../../app/shared/components/LocationInput';
 
 export default function ActivityForm() {
+  const { control, reset, handleSubmit } = useForm<ActivitySchema>({
+    mode: 'onTouched',
+    resolver: zodResolver(activitySchema) as any,
+    defaultValues: {
+      title: '',
+      description: '',
+      category: '',
+      date: undefined as any,
+      location: {
+        venue: '',
+        city: '',
+        latitude: 0,
+        longitude: 0,
+      },
+    },
+  });
+  const navigate = useNavigate();
   const { id } = useParams();
-  const { updateActivities, createActivities, activity, isLoadingActivity } =
+  const { updateActivity, createActivity, activity, isLoadingActivity } =
     useActivities(id);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (activity)
+      reset({
+        ...activity,
+        location: {
+          city: activity.city,
+          venue: activity.venue,
+          latitude: activity.latitude,
+          longitude: activity.longitude,
+        },
+      });
+  }, [activity, reset]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data: { [key: string]: FormDataEntryValue } = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
+  const onSubmit = (data: ActivitySchema) => {
+    const { location, ...rest } = data;
+
+    const flattenedData = { ...rest, ...location };
 
     if (activity) {
-      data.id = activity.id;
-      await updateActivities.mutateAsync(data as unknown as Activity);
-      navigate(`/activities/${activity.id}`);
+      updateActivity.mutate(
+        { ...activity, ...flattenedData },
+        {
+          onSuccess: () => navigate(`/activities/${activity.id}`),
+          onError: (error) => {
+            console.error('Failed to update activity:', error);
+          },
+        }
+      );
     } else {
-      createActivities.mutate(data as unknown as Activity, {
-        onSuccess: (id) => {
-          navigate(`/activities/${id}`);
+      createActivity.mutate(flattenedData, {
+        onSuccess: (id) => navigate(`/activities/${id}`),
+        onError: (error) => {
+          console.error('Failed to create activity:', error);
         },
       });
     }
@@ -41,78 +77,54 @@ export default function ActivityForm() {
   if (isLoadingActivity) return <Typography>Loading activity...</Typography>;
 
   return (
-    <Paper sx={{ p: 4, borderRadius: 2, boxShadow: 3 }}>
+    <Paper sx={{ borderRadius: 3, padding: 3 }}>
+      <Typography variant="h5" gutterBottom color="primary">
+        {activity ? 'Edit activity' : 'Create activity'}
+      </Typography>
       <Box
         component="form"
-        autoComplete="off"
-        noValidate
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
+        display="flex"
+        flexDirection="column"
+        gap={3}
       >
-        <Typography
-          variant="h5"
-          component="h2"
-          sx={{ mb: 3, fontWeight: "bold", color: "primary.main" }}
-        >
-          {activity ? "Edit Activity" : "Create Activity"}
-        </Typography>
-        <Stack spacing={3}>
-          <TextField
-            fullWidth
-            label="Title"
-            name="title"
-            defaultValue={activity?.title}
-          />
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            label="Description"
-            name="description"
-            defaultValue={activity?.description}
-          />
-          <TextField
-            fullWidth
+        <TextInput label="Title" control={control as any} name="title" />
+        <TextInput
+          label="Description"
+          control={control as any}
+          name="description"
+          multiline
+          rows={3}
+        />
+        <Box display="flex" gap={3}>
+          <SelectInput
+            items={categoryOptions}
             label="Category"
+            control={control as any}
             name="category"
-            defaultValue={activity?.category}
           />
-          <TextField
-            fullWidth
-            name="date"
-            type="date"
-            defaultValue={
-              activity?.date
-                ? new Date(activity?.date).toISOString().split("T")[0]
-                : new Date().toISOString().split("T")[0]
-            }
-          />
-          <TextField
-            fullWidth
-            label="City"
-            name="city"
-            defaultValue={activity?.city}
-          />
-          <TextField
-            fullWidth
-            label="Venue"
-            name="venue"
-            defaultValue={activity?.venue}
-          />
-          <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Button onClick={() => {}} variant="outlined" color="inherit">
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={
-                updateActivities.isPending || createActivities.isPending
-              }
-            >
-              Submit
-            </Button>
-          </Stack>
-        </Stack>
+          <DateTimeInput label="Date" control={control as any} name="date" />
+        </Box>
+
+        <LocationInput
+          control={control as any}
+          label="Enter the location"
+          name="location"
+        />
+
+        <Box display="flex" justifyContent="end" gap={3}>
+          <Button color="inherit" onClick={() => navigate(-1)}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            color="success"
+            variant="contained"
+            disabled={updateActivity.isPending || createActivity.isPending}
+          >
+            Submit
+          </Button>
+        </Box>
       </Box>
     </Paper>
   );

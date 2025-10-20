@@ -1,22 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import agent from "../api/agent";
-import { useLocation } from "react-router";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import agent from '../api/agent';
+import { useLocation } from 'react-router';
+import type { Activity, CreateActivity } from '../types';
 
 export const useActivities = (id?: string) => {
   const queryClient = useQueryClient();
   const location = useLocation();
 
   const { data: activities, isPending } = useQuery({
-    queryKey: ["activities"],
+    queryKey: ['activities'],
     queryFn: async () => {
-      const response = await agent.get<Activity[]>("/activities");
+      const response = await agent.get<Activity[]>('/activities');
       return response.data;
     },
-    enabled: !id && location.pathname === "/activities",
+    enabled: !id && location.pathname === '/activities',
   });
 
   const { data: activity, isLoading: isLoadingActivity } = useQuery({
-    queryKey: ["activities", id],
+    queryKey: ['activities', id],
     queryFn: async () => {
       const response = await agent.get<Activity>(`/activities/${id}`);
       return response.data;
@@ -24,25 +25,28 @@ export const useActivities = (id?: string) => {
     enabled: !!id,
   });
 
-  const updateActivities = useMutation({
+  const updateActivity = useMutation({
     mutationFn: async (activity: Activity) => {
-      await agent.put("/activities", activity);
+      await agent.put('/activities', activity);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["activities"],
+        queryKey: ['activities'],
       });
     },
   });
 
-  const createActivities = useMutation({
-    mutationFn: async (activity: Activity) => {
-      const response = await agent.post("/activities", activity);
+  const createActivity = useMutation({
+    mutationFn: async (activity: CreateActivity) => {
+      console.log(activity);
+      const response = await agent.post('/activities', activity);
+      console.log(response.data);
+
       return response.data;
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["activities"],
+        queryKey: ['activities'],
       });
     },
   });
@@ -53,7 +57,7 @@ export const useActivities = (id?: string) => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["activities"],
+        queryKey: ['activities'],
       });
     },
   });
@@ -63,8 +67,8 @@ export const useActivities = (id?: string) => {
     isPending,
     activity,
     isLoadingActivity,
-    updateActivities,
-    createActivities,
+    updateActivity,
+    createActivity,
     deleteActivity,
   };
 };
