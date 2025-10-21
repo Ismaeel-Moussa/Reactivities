@@ -1,6 +1,5 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './app/layout/styles.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -17,15 +16,15 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <StoreContext.Provider value={store}>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools />
-          <ToastContainer position="bottom-right" theme="colored" />
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </StoreContext.Provider>
-    </LocalizationProvider>
-  </StrictMode>
+    <StrictMode>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <StoreContext.Provider value={store}>
+                <QueryClientProvider client={queryClient}>
+                    <ReactQueryDevtools />
+                    <ToastContainer position="bottom-right" theme="colored" />
+                    <RouterProvider router={router} />
+                </QueryClientProvider>
+            </StoreContext.Provider>
+        </LocalizationProvider>
+    </StrictMode>
 );
