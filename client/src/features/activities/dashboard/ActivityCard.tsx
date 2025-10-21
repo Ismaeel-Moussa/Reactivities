@@ -10,10 +10,11 @@ import {
   Divider,
   Stack,
   CardActions,
-} from "@mui/material";
-import { Link } from "react-router";
-import { AccessTime, Place } from "@mui/icons-material";
-import { formatDate } from "../../../lib/util/util";
+} from '@mui/material';
+import { Link } from 'react-router';
+import { AccessTime, Place } from '@mui/icons-material';
+import { formatDate } from '../../../lib/util/util';
+import type { Activity } from '../../../lib/types';
 
 type Props = {
   activity: Activity;
@@ -49,16 +50,16 @@ export default function ActivityCard({ activity }: Props) {
         }
         action={getStatusChip()}
         title={
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             {activity.title}
           </Typography>
         }
         subheader={
           <>
-            Hosted by{" "}
+            Hosted by{' '}
             <Link
               to={`/profiles/bob`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <strong>Bob</strong>
             </Link>
@@ -70,30 +71,30 @@ export default function ActivityCard({ activity }: Props) {
           direction="row"
           alignItems="center"
           spacing={1}
-          sx={{ color: "text.secondary", mb: 2 }}
+          sx={{ color: 'text.secondary', mb: 2 }}
         >
-          <Box display={"flex"} alignItems={"center"} gap={0.5} flexGrow={0}>
-            <AccessTime sx={{ fontSize: "1rem" }} />
+          <Box display={'flex'} alignItems={'center'} gap={0.5} flexGrow={0}>
+            <AccessTime sx={{ fontSize: '1rem' }} />
             <Typography variant="body2" noWrap>
               {formatDate(activity.date)}
             </Typography>
           </Box>
 
-          <Place sx={{ fontSize: "1rem", ml: 2 }} />
+          <Place sx={{ fontSize: '1rem', ml: 2 }} />
           <Typography variant="body2">
             {activity.venue}, {activity.city}
           </Typography>
         </Stack>
 
-        <Box sx={{ bgcolor: "grey.100", p: 2, borderRadius: 2 }}>
+        <Box sx={{ bgcolor: 'grey.100', p: 2, borderRadius: 2 }}>
           <Typography variant="body2">Attendees go here</Typography>
         </Box>
       </CardContent>
       <Divider />
       <CardActions
         sx={{
-          justifyContent: "space-between",
-          alignItems: "center",
+          justifyContent: 'space-between',
+          alignItems: 'center',
           p: 2,
         }}
       >
@@ -106,7 +107,7 @@ export default function ActivityCard({ activity }: Props) {
           to={`/activities/${activity.id}`}
           size="small"
           variant="contained"
-          sx={{ borderRadius: 2, boxShadow: "none" }}
+          sx={{ borderRadius: 2, boxShadow: 'none' }}
         >
           View
         </Button>
