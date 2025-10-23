@@ -9,136 +9,204 @@ namespace Persistence
     {
         public static async Task SeedData(AppDbContext context, UserManager<User> userManager)
         {
+            var users = new List<User>
+            {
+                new() { DisplayName = "Ismaeel", UserName = "ismaeel@test.com", Email = "ismaeel@test.com" },
+                new() { DisplayName = "Ali", UserName = "ali@test.com", Email = "ali@test.com" },
+                new() { DisplayName = "Ahmed", UserName = "ahmed@test.com", Email = "ahmed@test.com" },
+            };
+
             if (!userManager.Users.Any())
             {
-                var users = new List<User>
-                {
-                    new() { DisplayName = "Ismaeel", UserName = "ismaeel@test.com", Email = "ismaeel@test.com" },
-                    new() { DisplayName = "Ali", UserName = "ali@test.com", Email = "ali@test.com" },
-                    new() { DisplayName = "Ahmed", UserName = "ahmed@test.com", Email = "ahmed@test.com" },
-                };
-
                 foreach( var user in users)
                 {
                     await userManager.CreateAsync(user, "Pa$$w0rd");
                 }
             }
-            
+
 
             if (context.Activities.Any()) return;
-
+            
+            
             var activities = new List<Activity>
             {
-                new() {
-                    Title = "Past Activity 1",
+                new()
+                {
+                    Title = "Historical Agriculture Talk",
                     Date = DateTime.Now.AddMonths(-2),
-                    Description = "Activity 2 months ago",
-                    Category = "agriculture",
-                    City = "London",
-                    Venue = "The Lamb and Flag, 33, Rose Street, Seven Dials, Covent Garden, London, Greater London, England, WC2E 9EB, United Kingdom",
-                    Latitude = 51.51171665,
-                    Longitude = -0.1256611057818921,
+                    Description = "A look back at agriculture and history, held near the Hagia Sophia.",
+                    Category = "agriculture", 
+                    City = "Istanbul", 
+                    Venue = "Hagia Sophia, Sultanahmet, Istanbul, Turkey", 
+                    Latitude = 41.0086, 
+                    Longitude = 28.9800, 
+                    Attendees =
+                    [
+                        new() { UserId = users[0].Id, IsHost = true },
+                        new() { UserId = users[1].Id, IsHost = false }
+                    ]
                 },
-                new() {
-                    Title = "Past Activity 2",
+                new()
+                {
+                    Title = "Topkapi Palace Cultural Tour",
                     Date = DateTime.Now.AddMonths(-1),
-                    Description = "Activity 1 month ago",
+                    Description = "A guided cultural tour of the Topkapi Palace.",
                     Category = "culture",
-                    City = "Paris",
-                    Venue = "Louvre Museum, Rue Saint-Honoré, Quartier du Palais Royal, 1st Arrondissement, Paris, Ile-de-France, Metropolitan France, 75001, France",
-                    Latitude = 48.8611473,
-                    Longitude = 2.33802768704666
+                    City = "Istanbul", 
+                    Venue = "Topkapi Palace, Cankurtaran, Istanbul, Turkey", 
+                    Latitude = 41.0116, 
+                    Longitude = 28.9834, 
+                    Attendees =
+                    [
+                        new() { UserId = users[1].Id, IsHost = true },
+                        new() { UserId = users[2].Id },
+                        new() { UserId = users[0].Id }
+                    ]
                 },
-                new() {
-                    Title = "Future Activity 1",
+                new()
+                {
+                    Title = "Blue Mosque Architectural Study",
                     Date = DateTime.Now.AddMonths(1),
-                    Description = "Activity 1 month in future",
+                    Description = "Exploring the culture and architecture of the Blue Mosque.",
                     Category = "culture",
-                    City = "London",
-                    Venue = "Natural History Museum",
-                    Latitude = 51.496510900000004,
-                    Longitude = -0.17600190725447445
+                    City = "Istanbul", 
+                    Venue = "Blue Mosque, Sultanahmet, Istanbul, Turkey", 
+                    Latitude = 41.0054, 
+                    Longitude = 28.9768, 
+                    Attendees =
+                    [
+                        new() { UserId = users[2].Id, IsHost = true }
+                    ]
                 },
-                new() {
-                    Title = "Future Activity 2",
+                new()
+                {
+                    Title = "Live Music at the Grand Bazaar",
                     Date = DateTime.Now.AddMonths(2),
-                    Description = "Activity 2 months in future",
+                    Description = "Finding hidden music spots in the Grand Bazaar.",
                     Category = "music",
-                    City = "London",
-                    Venue = "The O2",
-                    Latitude = 51.502936649999995,
-                    Longitude = 0.0032029278126681844
+                    City = "Istanbul", 
+                    Venue = "Grand Bazaar, Beyazıt, Istanbul, Turkey", 
+                    Latitude = 41.0105, 
+                    Longitude = 28.9681, 
+                    Attendees =
+                    [
+                        new() { UserId = users[0].Id, IsHost = true },
+                        new() { UserId = users[2].Id }
+                    ]
                 },
                 new()
                 {
-                    Title = "Future Activity 3",
+                    Title = "Urban Agriculture Meetup near Galata",
                     Date = DateTime.Now.AddMonths(3),
-                    Description = "Activity 3 months in future",
-                    Category = "agriculture",
-                    City = "London",
-                    Venue = "The Mayflower",
-                    Latitude = 51.501778,
-                    Longitude = -0.053577
+                    Description = "Discussing urban farming with a view of the Galata Tower.",
+                    Category = "agriculture", 
+                    City = "Istanbul", 
+                    Venue = "Galata Tower, Bereketzade, Istanbul, Turkey", 
+                    Latitude = 41.0256, 
+                    Longitude = 28.9744, 
+                    Attendees =
+                    [
+                        new() { UserId = users[1].Id, IsHost = true }
+                    ]
                 },
                 new()
                 {
-                    Title = "Future Activity 4",
+                    Title = "Dolmabahçe Palace Garden Tour",
                     Date = DateTime.Now.AddMonths(4),
-                    Description = "Activity 4 months in future",
-                    Category = "agriculture",
-                    City = "London",
-                    Venue = "The Blackfriar",
-                    Latitude = 51.512146650000005,
-                    Longitude = -0.10364680647106028
+                    Description = "A historical look at the agriculture and gardens of the palace.",
+                    Category = "agriculture", 
+                    City = "Istanbul", 
+                    Venue = "Dolmabahçe Palace, Vişnezade, Istanbul, Turkey", 
+                    Latitude = 41.0391, 
+                    Longitude = 29.0017, 
+                    Attendees =
+                    [
+                        new() { UserId = users[2].Id, IsHost = true },
+                        new() { UserId = users[0].Id }
+                    ]
                 },
                 new()
                 {
-                    Title = "Future Activity 5",
+                    Title = "Cultural Cruise on the Bosphorus",
                     Date = DateTime.Now.AddMonths(5),
-                    Description = "Activity 5 months in future",
+                    Description = "Exploring cultural sights along the Bosphorus.",
                     Category = "culture",
-                    City = "London",
-                    Venue = "Sherlock Holmes Museum, 221b, Baker Street, Marylebone, London, Greater London, England, NW1 6XE, United Kingdom",
-                    Latitude = 51.5237629,
-                    Longitude = -0.1584743
+                    City = "Istanbul", 
+                    Venue = "Bosphorus Strait, Istanbul, Turkey", 
+                    Latitude = 41.1194, 
+                    Longitude = 29.0753, 
+                    Attendees =
+                    [
+                        new() { UserId = users[0].Id, IsHost = true }
+                    ]
                 },
                 new()
                 {
-                    Title = "Future Activity 6",
+                    Title = "Classical Music in the Basilica Cistern",
                     Date = DateTime.Now.AddMonths(6),
-                    Description = "Activity 6 months in future",
+                    Description = "An atmospheric concert in the Basilica Cistern.",
                     Category = "music",
-                    City = "London",
-                    Venue = "Roundhouse, Chalk Farm Road, Maitland Park, Chalk Farm, London Borough of Camden, London, Greater London, England, NW1 8EH, United Kingdom",
-                    Latitude = 51.5432505,
-                    Longitude = -0.15197608174931165
+                    City = "Istanbul", 
+                    Venue = "Basilica Cistern, Yerebatan, Istanbul, Turkey", 
+                    Latitude = 41.0084, 
+                    Longitude = 28.9779, 
+                    Attendees =
+                    [
+                        new() { UserId = users[1].Id, IsHost = true },
+                        new() { UserId = users[0].Id }
+                    ]
                 },
                 new()
                 {
-                    Title = "Future Activity 7",
+                    Title = "Taksim Square & Istiklal Street Walk",
                     Date = DateTime.Now.AddMonths(7),
-                    Description = "Activity 2 months ago",
-                    Category = "travel",
-                    City = "London",
-                    Venue = "River Thames, England, United Kingdom",
-                    Latitude = 51.5575525,
-                    Longitude = -0.781404
+                    Description = "A trip and photography walk starting at Taksim.",
+                    Category = "trip",
+                    City = "Istanbul", 
+                    Venue = "Taksim Square, Gümüşsuyu, Istanbul, Turkey", 
+                    Latitude = 41.0369, 
+                    Longitude = 28.9870, 
+                    Attendees =
+                    [
+                        new() { UserId = users[2].Id, IsHost = true },
+                        new() { UserId = users[1].Id }
+                    ]
                 },
                 new()
                 {
-                    Title = "Future Activity 8",
+                    Title = "Sunset Filming at Maiden's Tower",
                     Date = DateTime.Now.AddMonths(8),
-                    Description = "Activity 8 months in future",
-                    Category = "travel",
+                    Description = "A film-making meetup to capture the sunset.",
+                    Category = "film",
+                    City = "Istanbul", 
+                    Venue = "Maiden's Tower, Salacak, Istanbul, Turkey", 
+                    Latitude = 41.0211, 
+                    Longitude = 29.0041, 
+                    Attendees =
+                    [
+                        new() { UserId = users[0].Id, IsHost = true }
+                    ]
+                },
+                new()
+                {
+                    Title = "Football Match at Atatürk Stadium",
+                    Date = DateTime.Now.AddMonths(9),
+                    Description = "Watching a live football match.",
+                    Category = "sport", 
                     City = "Istanbul",
-                    Venue = "Denizkoskler, avcilar istanbul",
-                    Latitude = 40.9796608,
-                    Longitude = 28.7342592
+                    Venue = "Atatürk Olympic Stadium, Ziya Gökalp, Istanbul, Turkey",
+                    Latitude = 41.0744, 
+                    Longitude = 28.7658, 
+                    Attendees =
+                    [
+                        new() { UserId = users[0].Id, IsHost = true },
+                        new() { UserId = users[1].Id }
+                    ]
                 }
             };
 
-             context.Activities.AddRange(activities);
-             await context.SaveChangesAsync();
+            context.Activities.AddRange(activities);
+            await context.SaveChangesAsync();
         }
     }
 }
