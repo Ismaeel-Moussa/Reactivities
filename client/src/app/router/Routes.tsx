@@ -5,9 +5,9 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 import ActivityForm from '../../features/activities/form/ActivityForm';
 import ActivityDetailPage from '../../features/activities/details/ActivityDetailPage';
 import Counter from '../../features/counter/Counter';
-import TestErrors from '../../features/activities/errors/TestErrors';
-import NotFound from '../../features/activities/errors/NotFound';
-import ServerError from '../../features/activities/errors/ServerError';
+import NotFound from '../../features/errors/NotFound';
+import ServerError from '../../features/errors/ServerError';
+import TestErrors from '../../features/errors/TestErrors';
 import LoginForm from '../../features/account/LoginForm';
 import RequireAuth from './RequireAuth';
 import RegisterForm from '../../features/account/RegisterForm';
