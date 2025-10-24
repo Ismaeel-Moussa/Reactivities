@@ -13,18 +13,24 @@ import { store, StoreContext } from './lib/stores/store.ts';
 import { ToastContainer } from 'react-toastify';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import AppThemeProvider from './lib/theme/AppThemeProvider.tsx';
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <StoreContext.Provider value={store}>
-                <QueryClientProvider client={queryClient}>
-                    <ReactQueryDevtools />
-                    <ToastContainer position="bottom-right" theme="colored" />
-                    <RouterProvider router={router} />
-                </QueryClientProvider>
-            </StoreContext.Provider>
-        </LocalizationProvider>
+        <AppThemeProvider>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <StoreContext.Provider value={store}>
+                    <QueryClientProvider client={queryClient}>
+                        <ReactQueryDevtools />
+                        <ToastContainer
+                            position="bottom-right"
+                            theme="colored"
+                        />
+                        <RouterProvider router={router} />
+                    </QueryClientProvider>
+                </StoreContext.Provider>
+            </LocalizationProvider>
+        </AppThemeProvider>
     </StrictMode>
 );

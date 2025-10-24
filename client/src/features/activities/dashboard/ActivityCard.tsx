@@ -126,7 +126,12 @@ export default function ActivityCard({ activity }: Props) {
                 <Box
                     display={'flex'}
                     gap={2}
-                    sx={{ bgcolor: 'grey.100', p: 2, borderRadius: 2 }}
+                    sx={{
+                        bgcolor: 'background.paper',
+                        p: 2,
+                        borderRadius: 2,
+                        border: '1px solid #999999',
+                    }}
                 >
                     {activity.attendees.map((attendee) => (
                         <AvatarPopover profile={attendee} key={attendee.id} />

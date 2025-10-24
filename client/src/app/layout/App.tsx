@@ -7,7 +7,8 @@ function App() {
     const location = useLocation();
     return (
         // bgcolor: "#eee"
-        <Box sx={{ bgcolor: '#eee', minHeight: '100vh' }}>
+        //sx={{ bgcolor: '#eee', minHeight: '100vh' }}
+        <Box>
             <ScrollRestoration />
             <CssBaseline />
             {location.pathname === '/' ? (

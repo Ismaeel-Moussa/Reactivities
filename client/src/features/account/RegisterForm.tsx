@@ -44,61 +44,71 @@ export default function RegisterForm() {
 
     return (
         <>
-            <Paper
-                component="form"
-                onSubmit={handleSubmit(onSubmit)}
+            <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    p: 3,
-                    gap: 3,
-                    maxWidth: 'md',
-                    mx: 'auto',
-                    borderRadius: 3,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: 'calc(100vh - 200px)',
+                    py: 4,
                 }}
             >
-                <Box
-                    display={'flex'}
-                    alignItems={'center'}
-                    justifyContent={'center'}
-                    gap={3}
-                    color={'secondary.main'}
+                <Paper
+                    component="form"
+                    onSubmit={handleSubmit(onSubmit)}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        p: 3,
+                        gap: 3,
+                        width: '100%',
+                        maxWidth: 800,
+                        borderRadius: 3,
+                    }}
                 >
-                    <HowToReg fontSize="large" />
-                    <Typography variant="h4">Sign up</Typography>
-                </Box>
-                <TextInput
-                    label="Display Name"
-                    name="displayName"
-                    control={control}
-                />
-                <TextInput label="Email" name="email" control={control} />
-                <TextInput
-                    label="Password"
-                    name="password"
-                    type="password"
-                    control={control}
-                />
-                <Button
-                    type="submit"
-                    disabled={!isValid || isSubmitting}
-                    variant="contained"
-                    size="large"
-                >
-                    Register
-                </Button>
-                <Typography sx={{ textAlign: 'center' }}>
-                    Already have an account?
-                    <Typography
-                        component={Link}
-                        to="/login"
-                        color="primary"
-                        sx={{ ml: 1, textDecoration: 'none' }}
+                    <Box
+                        display={'flex'}
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        gap={3}
+                        color={'secondary.main'}
                     >
-                        Sign in
+                        <HowToReg fontSize="large" />
+                        <Typography variant="h4">Sign up</Typography>
+                    </Box>
+                    <TextInput
+                        label="Display Name"
+                        name="displayName"
+                        control={control}
+                    />
+                    <TextInput label="Email" name="email" control={control} />
+                    <TextInput
+                        label="Password"
+                        name="password"
+                        type="password"
+                        control={control}
+                    />
+                    <Button
+                        type="submit"
+                        disabled={!isValid || isSubmitting}
+                        variant="contained"
+                        size="large"
+                    >
+                        Register
+                    </Button>
+                    <Typography sx={{ textAlign: 'center' }}>
+                        Already have an account?
+                        <Typography
+                            component={Link}
+                            to="/login"
+                            color="primary"
+                            sx={{ ml: 1, textDecoration: 'none' }}
+                        >
+                            Sign in
+                        </Typography>
                     </Typography>
-                </Typography>
-            </Paper>
+                </Paper>
+            </Box>
         </>
     );
 }

@@ -14,10 +14,12 @@ import { useStore } from '../../lib/hooks/useStore';
 import { Observer } from 'mobx-react-lite';
 import { useAccount } from '../../lib/hooks/useAccount';
 import UserMenu from './UserMenu';
+import ThemeToggleButton from './ThemeToggleButton';
 
 export default function NavBar() {
     const { uiStore } = useStore();
     const { currentUser } = useAccount();
+
     return (
         <>
             <Box>
@@ -70,6 +72,7 @@ export default function NavBar() {
                                         </MenuItemLink>
                                     </>
                                 )}
+                                {<ThemeToggleButton />}
                             </Box>
                         </Toolbar>
                     </Container>

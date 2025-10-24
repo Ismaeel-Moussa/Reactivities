@@ -29,7 +29,16 @@ export default function LoginForm() {
     };
 
     return (
-        <>
+        // 1. This new Box is the full-height centering container
+        <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 'calc(100vh - 200px)',
+                py: 4,
+            }}
+        >
             <Paper
                 component="form"
                 onSubmit={handleSubmit(onSubmit)}
@@ -38,8 +47,8 @@ export default function LoginForm() {
                     flexDirection: 'column',
                     p: 3,
                     gap: 3,
-                    maxWidth: 'md',
-                    mx: 'auto',
+                    width: '100%',
+                    maxWidth: 800,
                     borderRadius: 3,
                 }}
             >
@@ -80,6 +89,6 @@ export default function LoginForm() {
                     </Typography>
                 </Typography>
             </Paper>
-        </>
+        </Box>
     );
 }
