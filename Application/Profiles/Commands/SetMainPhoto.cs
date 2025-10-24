@@ -1,0 +1,41 @@
+using System;
+using Application.Core;
+using Application.Interfaces;
+using MediatR;
+using Persistence;
+namespace Application.Profiles.Commands;
+
+public class SetMainPhoto
+{
+    public class Command : IRequest<Result<Unit>>
+    {
+        public required string PhotoId { get; set; }
+    }
+
+    public class Handler(AppDbContext context, IUserAccessor userAccessor) 
+    : IRequestHandler<Command, Result<Unit>>
+    {
+        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+        {
+            var user = await userAccessor.GetUserWithPhotosAsync();
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == request.PhotoId);
+
+            if (photo == null) return Result<Unit>.Failure("Cannot find photo", 400);
+
+            if (photo.IsMain) return Result<Unit>.Failure("This photo is already the main photo", 400);
+
+            var currentMainPhoto = user.Photos.FirstOrDefault(x => x.IsMain);
+            if (currentMainPhoto != null) currentMainPhoto.IsMain = false;
+
+            photo.IsMain = true;
+            user.ImageUrl = photo.Url;
+
+            var result = await context.SaveChangesAsync(cancellationToken) > 0;
+
+            return result 
+                ? Result<Unit>.Success(Unit.Value) 
+                : Result<Unit>.Failure("Failed to set photo as main photo in DB", 400);
+        }
+    }
+}
