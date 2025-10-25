@@ -54,10 +54,10 @@ export default function NavBar() {
                                 <MenuItemLink to="/activities">
                                     Activities
                                 </MenuItemLink>
-                                <MenuItemLink to="/counter">
+                                {/* <MenuItemLink to="/counter">
                                     Counter
                                 </MenuItemLink>
-                                <MenuItemLink to="/errors">Errors</MenuItemLink>
+                                <MenuItemLink to="/errors">Errors</MenuItemLink> */}
                             </Box>
                             <Box display={'flex'} alignItems={'center'}>
                                 {currentUser ? (
@@ -72,6 +72,7 @@ export default function NavBar() {
                                         </MenuItemLink>
                                     </>
                                 )}
+                                {/* Theme */}
                                 {<ThemeToggleButton />}
                             </Box>
                         </Toolbar>

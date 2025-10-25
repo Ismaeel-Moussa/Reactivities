@@ -14,7 +14,7 @@ export default function ActivityDetailPage() {
     if (!activity) return <Typography>Activity not found</Typography>;
 
     return (
-        <Grid mt={5} container spacing={8}>
+        <Grid container spacing={8}>
             <Grid size={8}>
                 <ActivityDetailsHeader activity={activity} />
                 <ActivityDetailsInfo activity={activity} />

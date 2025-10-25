@@ -1,14 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { LoginSchema } from '../schemas/loginSchema';
 import agent from '../api/agent';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import type { RegisterSchema } from '../schemas/registerSchema';
 import { toast } from 'react-toastify';
 
 export const useAccount = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const location = useLocation();
 
     // Login User
     const loginUser = useMutation({
@@ -53,10 +52,7 @@ export const useAccount = () => {
             return response.data;
         },
         // it will get the currentUser if we don't have a currentUser.
-        enabled:
-            !queryClient.getQueryData(['user']) &&
-            location.pathname !== '/login' &&
-            location.pathname !== '/register',
+        enabled: !queryClient.getQueryData(['user']),
     });
 
     return {

@@ -7,8 +7,7 @@ function App() {
     const location = useLocation();
     return (
         // bgcolor: "#eee"
-        //sx={{ bgcolor: '#eee', minHeight: '100vh' }}
-        <Box>
+        <Box sx={{ minHeight: '100vh' }}>
             <ScrollRestoration />
             <CssBaseline />
             {location.pathname === '/' ? (
@@ -16,7 +15,7 @@ function App() {
             ) : (
                 <>
                     <NavBar />
-                    <Container maxWidth="xl" sx={{ mt: 3 }}>
+                    <Container maxWidth="xl" sx={{ mt: 4 }}>
                         <Outlet />
                     </Container>
                 </>

@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import AvatarPopover from '../../../app/shared/components/AvatarPopover';
 import { useAccount } from '../../../lib/hooks/useAccount';
+import { Link } from 'react-router';
 
 type Props = {
     activity: Activity;
@@ -70,7 +71,13 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                                     <Box>
                                         <Typography
                                             variant="h6"
-                                            sx={{ fontWeight: 'bold' }}
+                                            sx={{
+                                                fontWeight: 'bold',
+                                                textDecoration: 'none',
+                                                color: 'inherit',
+                                            }}
+                                            component={Link}
+                                            to={`/profiles/${attendee.id}`}
                                         >
                                             {attendee.displayName}
                                         </Typography>

@@ -14,7 +14,7 @@ export default function ActivityList() {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 3,
+                    gap: 3.5,
                 }}
             >
                 {activities.map((activity) => (

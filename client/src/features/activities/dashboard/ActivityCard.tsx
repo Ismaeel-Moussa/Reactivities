@@ -72,8 +72,10 @@ export default function ActivityCard({ activity }: Props) {
                     avatar={
                         <Avatar
                             sx={{ width: 60, height: 60 }}
-                            src={`/images/user.png`}
-                            alt="Host Avatar"
+                            src={activity.hostImageUrl}
+                            alt={'host image'}
+                            component={Link}
+                            to={`/profiles/${activity.hostId}`}
                         />
                     }
                     title={
@@ -127,10 +129,11 @@ export default function ActivityCard({ activity }: Props) {
                     display={'flex'}
                     gap={2}
                     sx={{
-                        bgcolor: 'background.paper',
+                        bgcolor: 'action.hover',
                         p: 2,
                         borderRadius: 2,
-                        border: '1px solid #999999',
+                        border: '1px solid ',
+                        borderColor: 'divider',
                     }}
                 >
                     {activity.attendees.map((attendee) => (
@@ -156,7 +159,7 @@ export default function ActivityCard({ activity }: Props) {
                             fontWeight: 'bold',
                         }}
                     />
-                    <Typography variant="body2">
+                    <Typography variant="body2" noWrap>
                         {activity.description}
                     </Typography>
                 </Stack>
