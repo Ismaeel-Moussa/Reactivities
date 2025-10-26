@@ -1,10 +1,13 @@
 import { useParams } from 'react-router';
 import { useProfile } from '../../lib/hooks/useProfile';
 import { Box, Button, Divider, Typography } from '@mui/material';
+import ProfileEditForm from './ProfileEditForm';
+import { useState } from 'react';
 
 export default function ProfileAbout() {
     const { id } = useParams();
     const { profile, isCurrentUser } = useProfile(id);
+    const [editMode, setEditMode] = useState(false);
     return (
         <Box>
             <Box display={'flex'} justifyContent={'space-between'}>
@@ -12,14 +15,23 @@ export default function ProfileAbout() {
                     About {profile?.displayName}
                 </Typography>
                 {isCurrentUser && (
-                    <Button variant="outlined">Edit profile</Button>
+                    <Button
+                        onClick={() => setEditMode(!editMode)}
+                        variant="outlined"
+                    >
+                        {editMode ? 'Cancel' : 'Edit profile'}
+                    </Button>
                 )}
             </Box>
             <Divider sx={{ my: 2 }} />
             <Box sx={{ overflow: 'auto', maxHeight: 350 }}>
-                <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-                    {profile?.bio || 'No description added yet'}
-                </Typography>
+                {editMode ? (
+                    <ProfileEditForm setEditMode={setEditMode} />
+                ) : (
+                    <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+                        {profile?.bio || 'No description added yet'}
+                    </Typography>
+                )}
             </Box>
         </Box>
     );

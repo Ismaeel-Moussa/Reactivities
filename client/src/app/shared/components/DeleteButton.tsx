@@ -15,7 +15,9 @@ export default function DeleteButton() {
                     <HighlightOffOutlinedIcon
                         sx={{
                             fontSize: 28,
-                            color: '#ff2f2fff',
+                            color: '#ff0000ff',
+                            bgcolor: 'white',
+                            borderRadius: '50%',
                         }}
                     />
                 </Button>

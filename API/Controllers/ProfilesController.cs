@@ -36,6 +36,13 @@ public class ProfilesController : BaseApiController
     [HttpGet("{userId}")]
     public async Task<ActionResult<UserProfileDto>> GetProfile(string userId)
     {
-        return HandleResult(await Mediator.Send(new GetProfile.Query{UserId = userId}));
+        return HandleResult(await Mediator.Send(new GetProfile.Query { UserId = userId }));
     }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateProfile(UpdateProfile.Command command)
+    {
+        return HandleResult(await Mediator.Send(command));
+    }
+
 }
