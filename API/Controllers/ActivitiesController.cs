@@ -28,9 +28,9 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new CreateActivity.Command { CreateActivityDto = createActivityDto }));
         }
 
-        [HttpPut("{id}")]
-        [Authorize(Policy = "IsActivityHost")]
-        public async Task<ActionResult> UpdateActivity(string id , UpdateActivityDto updateActivityDto)
+       
+        [HttpPut]
+        public async Task<ActionResult> UpdateActivity(UpdateActivityDto updateActivityDto)
         {
             return HandleResult(await Mediator.Send(new UpdateActivity.Command { UpdateActivityDto = updateActivityDto }));     
         }

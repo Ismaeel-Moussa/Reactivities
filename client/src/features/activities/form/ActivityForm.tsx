@@ -4,8 +4,8 @@ import { useNavigate, useParams } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import {
-  activitySchema,
-  type ActivitySchema,
+    activitySchema,
+    type ActivitySchema,
 } from '../../../lib/schemas/activitySchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import TextInput from '../../../app/shared/components/TextInput';
@@ -15,117 +15,127 @@ import DateTimeInput from '../../../app/shared/components/DateTimeInput';
 import LocationInput from '../../../app/shared/components/LocationInput';
 
 export default function ActivityForm() {
-  const { control, reset, handleSubmit } = useForm<ActivitySchema>({
-    mode: 'onTouched',
-    resolver: zodResolver(activitySchema) as any,
-    defaultValues: {
-      title: '',
-      description: '',
-      category: '',
-      date: undefined as any,
-      location: {
-        venue: '',
-        city: '',
-        latitude: 0,
-        longitude: 0,
-      },
-    },
-  });
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const { updateActivity, createActivity, activity, isLoadingActivity } =
-    useActivities(id);
-
-  useEffect(() => {
-    if (activity)
-      reset({
-        ...activity,
-        location: {
-          city: activity.city,
-          venue: activity.venue,
-          latitude: activity.latitude,
-          longitude: activity.longitude,
+    const { control, reset, handleSubmit } = useForm<ActivitySchema>({
+        mode: 'onTouched',
+        resolver: zodResolver(activitySchema) as any,
+        defaultValues: {
+            title: '',
+            description: '',
+            category: '',
+            date: undefined as any,
+            location: {
+                venue: '',
+                city: '',
+                latitude: 0,
+                longitude: 0,
+            },
         },
-      });
-  }, [activity, reset]);
+    });
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const { updateActivity, createActivity, activity, isLoadingActivity } =
+        useActivities(id);
 
-  const onSubmit = (data: ActivitySchema) => {
-    const { location, ...rest } = data;
+    useEffect(() => {
+        if (activity)
+            reset({
+                ...activity,
+                location: {
+                    city: activity.city,
+                    venue: activity.venue,
+                    latitude: activity.latitude,
+                    longitude: activity.longitude,
+                },
+            });
+    }, [activity, reset]);
 
-    const flattenedData = { ...rest, ...location };
+    const onSubmit = (data: ActivitySchema) => {
+        const { location, ...rest } = data;
 
-    if (activity) {
-      updateActivity.mutate(
-        { ...activity, ...flattenedData },
-        {
-          onSuccess: () => navigate(`/activities/${activity.id}`),
-          onError: (error) => {
-            console.error('Failed to update activity:', error);
-          },
+        const flattenedData = { ...rest, ...location };
+
+        if (activity) {
+            updateActivity.mutate(
+                { ...activity, ...flattenedData },
+                {
+                    onSuccess: () => navigate(`/activities/${activity.id}`),
+                    onError: (error) => {
+                        console.error('Failed to update activity:', error);
+                    },
+                }
+            );
+        } else {
+            createActivity.mutate(flattenedData, {
+                onSuccess: (id) => navigate(`/activities/${id}`),
+                onError: (error) => {
+                    console.error('Failed to create activity:', error);
+                },
+            });
         }
-      );
-    } else {
-      createActivity.mutate(flattenedData, {
-        onSuccess: (id) => navigate(`/activities/${id}`),
-        onError: (error) => {
-          console.error('Failed to create activity:', error);
-        },
-      });
-    }
-  };
+    };
 
-  if (isLoadingActivity) return <Typography>Loading activity...</Typography>;
+    if (isLoadingActivity) return <Typography>Loading activity...</Typography>;
 
-  return (
-    <Paper sx={{ borderRadius: 3, padding: 3 }}>
-      <Typography variant="h5" gutterBottom color="primary">
-        {activity ? 'Edit activity' : 'Create activity'}
-      </Typography>
-      <Box
-        component="form"
-        onSubmit={handleSubmit(onSubmit)}
-        display="flex"
-        flexDirection="column"
-        gap={3}
-      >
-        <TextInput label="Title" control={control as any} name="title" />
-        <TextInput
-          label="Description"
-          control={control as any}
-          name="description"
-          multiline
-          rows={3}
-        />
-        <Box display="flex" gap={3}>
-          <SelectInput
-            items={categoryOptions}
-            label="Category"
-            control={control as any}
-            name="category"
-          />
-          <DateTimeInput label="Date" control={control as any} name="date" />
-        </Box>
+    return (
+        <Paper sx={{ borderRadius: 3, padding: 3 }}>
+            <Typography variant="h5" gutterBottom color="primary">
+                {activity ? 'Edit activity' : 'Create activity'}
+            </Typography>
+            <Box
+                component="form"
+                onSubmit={handleSubmit(onSubmit)}
+                display="flex"
+                flexDirection="column"
+                gap={3}
+            >
+                <TextInput
+                    label="Title"
+                    control={control as any}
+                    name="title"
+                />
+                <TextInput
+                    label="Description"
+                    control={control as any}
+                    name="description"
+                    multiline
+                    rows={3}
+                />
+                <Box display="flex" gap={3}>
+                    <SelectInput
+                        items={categoryOptions}
+                        label="Category"
+                        control={control as any}
+                        name="category"
+                    />
+                    <DateTimeInput
+                        label="Date"
+                        control={control as any}
+                        name="date"
+                    />
+                </Box>
 
-        <LocationInput
-          control={control as any}
-          label="Enter the location"
-          name="location"
-        />
+                <LocationInput
+                    control={control as any}
+                    label="Enter the location"
+                    name="location"
+                />
 
-        <Box display="flex" justifyContent="end" gap={3}>
-          <Button color="inherit" onClick={() => navigate(-1)}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            color="success"
-            variant="contained"
-            disabled={updateActivity.isPending || createActivity.isPending}
-          >
-            Submit
-          </Button>
-        </Box>
-      </Box>
-    </Paper>
-  );
+                <Box display="flex" justifyContent="end" gap={3}>
+                    <Button color="inherit" onClick={() => navigate(-1)}>
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        color="success"
+                        variant="contained"
+                        disabled={
+                            updateActivity.isPending || createActivity.isPending
+                        }
+                    >
+                        Submit
+                    </Button>
+                </Box>
+            </Box>
+        </Paper>
+    );
 }
