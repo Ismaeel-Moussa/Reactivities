@@ -11,9 +11,10 @@ namespace Persistence
         {
             var users = new List<User>
             {
-                new() { DisplayName = "Ismaeel", UserName = "ismaeel@test.com", Email = "ismaeel@test.com" },
-                new() { DisplayName = "Ali", UserName = "ali@test.com", Email = "ali@test.com" },
-                new() { DisplayName = "Ahmed", UserName = "ahmed@test.com", Email = "ahmed@test.com" },
+                new() { DisplayName = "Ismaeel Moussa", UserName = "ismaeel.moussa@test.com", Email = "ismaeel.moussa@test.com" },
+                new() { DisplayName = "Abdalnoor Alhajo", UserName = "abdalnoor.alhajo@test.com", Email = "abdalnoor.alhajo@test.com" },
+                new() { DisplayName = "Ali Shwail", UserName = "ali.shwail@test.com", Email = "ali.shwail@test.com" },
+                new() { DisplayName = "Ali Mohammed", UserName = "ali.mohammed@test.com", Email = "ali.mohammed@test.com" },
             };
 
             if (!userManager.Users.Any())
@@ -29,11 +30,28 @@ namespace Persistence
             
             
             var activities = new List<Activity>
-            {
+            {  new()
+                {
+                    Title = "Basketball Match at Altinbas University",
+                    Date = DateTime.Now.AddMonths(1),
+                    Description = "Playing basketball match.",
+                    Category = "sport", 
+                    City = "Istanbul",
+                    Venue = "Altinbas Mahmutbey Campus, Istanbul, Turkey",
+                    Latitude = 41.0575, 
+                    Longitude = 28.8204, 
+                    Attendees =
+                    [
+                        new() { UserId = users[3].Id, IsHost = true },
+                        new() { UserId = users[0].Id },
+                        new() { UserId = users[2].Id },
+                        new() { UserId = users[1].Id },
+                    ]
+                },
                 new()
                 {
                     Title = "Historical Agriculture Talk",
-                    Date = DateTime.Now.AddMonths(-2),
+                    Date = DateTime.Now.AddMonths(4),
                     Description = "A look back at agriculture and history, held near the Hagia Sophia.",
                     Category = "agriculture", 
                     City = "Istanbul", 
@@ -43,13 +61,15 @@ namespace Persistence
                     Attendees =
                     [
                         new() { UserId = users[0].Id, IsHost = true },
-                        new() { UserId = users[1].Id, IsHost = false }
+                        new() { UserId = users[2].Id },
+                        new() { UserId = users[1].Id },
+                        new() { UserId = users[3].Id }
                     ]
                 },
                 new()
                 {
                     Title = "Topkapi Palace Cultural Tour",
-                    Date = DateTime.Now.AddMonths(-1),
+                    Date = DateTime.Now.AddMonths(1),
                     Description = "A guided cultural tour of the Topkapi Palace.",
                     Category = "culture",
                     City = "Istanbul", 
@@ -66,7 +86,7 @@ namespace Persistence
                 new()
                 {
                     Title = "Blue Mosque Architectural Study",
-                    Date = DateTime.Now.AddMonths(1),
+                    Date = DateTime.Now.AddMonths(2),
                     Description = "Exploring the culture and architecture of the Blue Mosque.",
                     Category = "culture",
                     City = "Istanbul", 
@@ -75,7 +95,8 @@ namespace Persistence
                     Longitude = 28.9768, 
                     Attendees =
                     [
-                        new() { UserId = users[2].Id, IsHost = true }
+                        new() { UserId = users[2].Id, IsHost = true },
+                        new() { UserId = users[3].Id }
                     ]
                 },
                 new()
@@ -106,7 +127,7 @@ namespace Persistence
                     Longitude = 28.9744, 
                     Attendees =
                     [
-                        new() { UserId = users[1].Id, IsHost = true }
+                        new() { UserId = users[3].Id, IsHost = true }
                     ]
                 },
                 new()
@@ -122,7 +143,7 @@ namespace Persistence
                     Attendees =
                     [
                         new() { UserId = users[2].Id, IsHost = true },
-                        new() { UserId = users[0].Id }
+                        new() { UserId = users[1].Id }
                     ]
                 },
                 new()
@@ -137,7 +158,7 @@ namespace Persistence
                     Longitude = 29.0753, 
                     Attendees =
                     [
-                        new() { UserId = users[0].Id, IsHost = true }
+                        new() { UserId = users[1].Id, IsHost = true }
                     ]
                 },
                 new()
@@ -153,7 +174,7 @@ namespace Persistence
                     Attendees =
                     [
                         new() { UserId = users[1].Id, IsHost = true },
-                        new() { UserId = users[0].Id }
+                        new() { UserId = users[3].Id }
                     ]
                 },
                 new()
@@ -184,25 +205,12 @@ namespace Persistence
                     Longitude = 29.0041, 
                     Attendees =
                     [
-                        new() { UserId = users[0].Id, IsHost = true }
-                    ]
-                },
-                new()
-                {
-                    Title = "Football Match at Atatürk Stadium",
-                    Date = DateTime.Now.AddMonths(9),
-                    Description = "Watching a live football match.",
-                    Category = "sport", 
-                    City = "Istanbul",
-                    Venue = "Atatürk Olympic Stadium, Ziya Gökalp, Istanbul, Turkey",
-                    Latitude = 41.0744, 
-                    Longitude = 28.7658, 
-                    Attendees =
-                    [
                         new() { UserId = users[0].Id, IsHost = true },
-                        new() { UserId = users[1].Id }
+                        new() { UserId = users[3].Id  },
+                        new() { UserId = users[1].Id },
                     ]
                 }
+
             };
 
             context.Activities.AddRange(activities);

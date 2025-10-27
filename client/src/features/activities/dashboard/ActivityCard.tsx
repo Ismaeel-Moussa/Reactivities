@@ -137,7 +137,14 @@ export default function ActivityCard({ activity }: Props) {
                     }}
                 >
                     {activity.attendees.map((attendee) => (
-                        <AvatarPopover profile={attendee} key={attendee.id} />
+                        <AvatarPopover
+                            profile={attendee}
+                            key={attendee.id}
+                            sx={{
+                                border: attendee.following ? 2 : 0,
+                                borderColor: 'scondary.main',
+                            }}
+                        />
                     ))}
                 </Box>
             </CardContent>

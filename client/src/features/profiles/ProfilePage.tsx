@@ -13,7 +13,7 @@ export default function ProfilePage() {
     return (
         <Grid>
             <Grid>
-                <ProfileHeader profile={profile} />
+                <ProfileHeader />
                 <ProfileContent />
             </Grid>
         </Grid>

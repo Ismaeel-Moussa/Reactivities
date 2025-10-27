@@ -17,7 +17,6 @@ type Props = {
 };
 
 export default function ActivityDetailsSidebar({ activity }: Props) {
-    const isCurrentUserFollowing = true;
     const { currentUser } = useAccount();
     const { attendees, hostId } = activity;
 
@@ -83,7 +82,7 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                                         </Typography>
 
                                         {currentUser?.id !== attendee.id &&
-                                            isCurrentUserFollowing && (
+                                            attendee.following && (
                                                 <Typography
                                                     variant="body2"
                                                     sx={{
