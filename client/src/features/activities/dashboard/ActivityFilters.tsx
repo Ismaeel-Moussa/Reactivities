@@ -8,14 +8,13 @@ import {
     Stack,
     Typography,
     Divider,
-    GlobalStyles, // We need this for the new component
-    useTheme, // and this
+    GlobalStyles,
+    useTheme,
 } from '@mui/material';
 import Calendar from 'react-calendar';
+import { useStore } from '../../../lib/hooks/useStore';
+import { observer } from 'mobx-react-lite';
 
-// ---
-// Create the new component here (paste code from above)
-// ---
 const CalendarGlobalStyles = () => {
     const theme = useTheme();
 
@@ -122,7 +121,11 @@ const CalendarGlobalStyles = () => {
     );
 };
 
-export default function ActivityFilters() {
+const ActivityFilters = observer(() => {
+    const {
+        activityStore: { setFilter, setStartDate, filter, startDate },
+    } = useStore();
+
     return (
         <>
             <CalendarGlobalStyles />
@@ -144,13 +147,22 @@ export default function ActivityFilters() {
                     </Box>
                     <Divider sx={{ mb: 1 }} />
                     <MenuList>
-                        <MenuItem selected>
+                        <MenuItem
+                            selected={filter === 'all'}
+                            onClick={() => setFilter('all')}
+                        >
                             <ListItemText primary="All Activities" />
                         </MenuItem>
-                        <MenuItem>
+                        <MenuItem
+                            selected={filter === 'isGoing'}
+                            onClick={() => setFilter('isGoing')}
+                        >
                             <ListItemText primary="I'm going" />
                         </MenuItem>
-                        <MenuItem>
+                        <MenuItem
+                            selected={filter === 'isHost'}
+                            onClick={() => setFilter('isHost')}
+                        >
                             <ListItemText primary="I'm hosting" />
                         </MenuItem>
                     </MenuList>
@@ -170,9 +182,14 @@ export default function ActivityFilters() {
                         </Typography>
                     </Box>
                     <Divider sx={{ mb: 2 }} />
-                    <Calendar />
+                    <Calendar
+                        value={startDate}
+                        onChange={(date) => setStartDate(date as Date)}
+                    />
                 </Paper>
             </Stack>
         </>
     );
-}
+});
+
+export default ActivityFilters;

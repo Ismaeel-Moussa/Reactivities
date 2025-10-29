@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import agent from '../api/agent';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type { EditProfileSchema } from '../schemas/editProfileSchema';
 
 export const useProfile = (id?: string, predicate?: string) => {
@@ -166,6 +166,26 @@ export const useProfile = (id?: string, predicate?: string) => {
         },
     });
 
+    // Get User Activities
+    const [filter, setFilter] = useState<string | null>(null);
+    const { data: userActivities, isLoading: loadingUserActivities } = useQuery(
+        {
+            queryKey: ['user-activities', filter],
+            queryFn: async () => {
+                const response = await agent.get<Activity[]>(
+                    `/profiles/${id}/activities`,
+                    {
+                        params: {
+                            filter,
+                        },
+                    }
+                );
+                return response.data;
+            },
+            enabled: !!id && !!filter,
+        }
+    );
+
     return {
         profile,
         loadingProfile,
@@ -179,5 +199,9 @@ export const useProfile = (id?: string, predicate?: string) => {
         updateFollowing,
         followings,
         loadingFollowings,
+        userActivities,
+        loadingUserActivities,
+        setFilter,
+        filter,
     };
 };
