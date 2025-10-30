@@ -73,8 +73,10 @@ export default function RegisterForm() {
                         gap={3}
                         color={'secondary.main'}
                     >
-                        <HowToReg fontSize="large" />
-                        <Typography variant="h4">Sign up</Typography>
+                        <HowToReg fontSize="large" color="primary" />
+                        <Typography variant="h4" color="primary">
+                            Sign up
+                        </Typography>
                     </Box>
                     <TextInput
                         label="Display Name"

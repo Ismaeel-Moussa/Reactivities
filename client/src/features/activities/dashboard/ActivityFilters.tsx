@@ -1,4 +1,4 @@
-import { Event, FilterList } from '@mui/icons-material';
+import { Event, FilterList, Category, Person } from '@mui/icons-material';
 import {
     Box,
     ListItemText,
@@ -10,10 +10,13 @@ import {
     Divider,
     GlobalStyles,
     useTheme,
+    TextField,
+    InputAdornment,
 } from '@mui/material';
 import Calendar from 'react-calendar';
 import { useStore } from '../../../lib/hooks/useStore';
 import { observer } from 'mobx-react-lite';
+import { useState } from 'react';
 
 const CalendarGlobalStyles = () => {
     const theme = useTheme();
@@ -21,7 +24,6 @@ const CalendarGlobalStyles = () => {
     return (
         <GlobalStyles
             styles={{
-                // ... (all the styles from the section above) ...
                 ':root': {
                     '--cal-font-family': theme.typography.fontFamily,
                     '--cal-primary-color': theme.palette.primary.main,
@@ -123,50 +125,272 @@ const CalendarGlobalStyles = () => {
 
 const ActivityFilters = observer(() => {
     const {
-        activityStore: { setFilter, setStartDate, filter, startDate },
+        activityStore: {
+            setFilter,
+            filter,
+            setStartDate,
+            startDate,
+            setHostName,
+            hostName,
+            setCategoryType,
+            categoryType,
+        },
     } = useStore();
+
+    const [localHostName, setLocalHostName] = useState(hostName);
+    const [localCategory, setLocalCategory] = useState(categoryType);
 
     return (
         <>
             <CalendarGlobalStyles />
 
             <Stack spacing={3}>
-                <Paper elevation={2} sx={{ p: 2, borderRadius: 2 }}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            mb: 1,
-                            color: 'primary.main',
-                        }}
+                <Box display={'flex'} gap={3}>
+                    {/* Search Filters */}
+                    <Paper
+                        elevation={2}
+                        sx={{ p: 2.5, borderRadius: 2, width: '65%' }}
                     >
-                        <FilterList sx={{ mr: 1 }} />
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                            Filters
-                        </Typography>
-                    </Box>
-                    <Divider sx={{ mb: 1 }} />
-                    <MenuList>
-                        <MenuItem
-                            selected={filter === 'all'}
-                            onClick={() => setFilter('all')}
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                mb: 1,
+                                color: 'primary.main',
+                            }}
                         >
-                            <ListItemText primary="All Activities" />
-                        </MenuItem>
-                        <MenuItem
-                            selected={filter === 'isGoing'}
-                            onClick={() => setFilter('isGoing')}
+                            <FilterList sx={{ mr: 1 }} />
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 'bold' }}
+                            >
+                                Search Filters
+                            </Typography>
+                        </Box>
+                        <Divider sx={{ mb: 2 }} />
+
+                        <Stack spacing={2.5}>
+                            {/* Host Filter */}
+                            <Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        mb: 1.5,
+                                    }}
+                                >
+                                    <Person
+                                        sx={{
+                                            fontSize: '1.2rem',
+                                            color: 'text.secondary',
+                                            mr: 1,
+                                        }}
+                                    />
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            fontWeight: 600,
+                                            color: 'text.secondary',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '0.5px',
+                                            fontSize: '0.75rem',
+                                        }}
+                                    >
+                                        Filter by Host
+                                    </Typography>
+                                </Box>
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    placeholder="Write to search..."
+                                    // --- UPDATED PROPS ---
+                                    value={localHostName}
+                                    onChange={(e) => {
+                                        setLocalHostName(e.target.value);
+                                        setHostName(e.target.value);
+                                    }}
+                                    // ---
+                                    slotProps={{
+                                        input: {
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <Person
+                                                        sx={{
+                                                            fontSize: '1.1rem',
+                                                            color: 'text.disabled',
+                                                        }}
+                                                    />
+                                                </InputAdornment>
+                                            ),
+                                        },
+                                    }}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            borderRadius: 2,
+                                            bgcolor: 'rgba(32, 167, 172, 0.04)',
+                                            transition: 'all 0.2s ease',
+                                            '&:hover': {
+                                                bgcolor:
+                                                    'rgba(32, 167, 172, 0.08)',
+                                            },
+                                            '&.Mui-focused': {
+                                                bgcolor: 'background.paper',
+                                            },
+                                        },
+                                    }}
+                                />
+                            </Box>
+
+                            {/* Category Filter */}
+                            <Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        mb: 1.5,
+                                    }}
+                                >
+                                    <Category
+                                        sx={{
+                                            fontSize: '1.2rem',
+                                            color: 'text.secondary',
+                                            mr: 1,
+                                        }}
+                                    />
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            fontWeight: 600,
+                                            color: 'text.secondary',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '0.5px',
+                                            fontSize: '0.75rem',
+                                        }}
+                                    >
+                                        Filter by Category
+                                    </Typography>
+                                </Box>
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    placeholder="Write to search..."
+                                    // --- UPDATED PROPS ---
+                                    value={localCategory}
+                                    onChange={(e) => {
+                                        setLocalCategory(e.target.value);
+                                        setCategoryType(e.target.value);
+                                    }}
+                                    slotProps={{
+                                        input: {
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <Category
+                                                        sx={{
+                                                            fontSize: '1.1rem',
+                                                            color: 'text.disabled',
+                                                        }}
+                                                    />
+                                                </InputAdornment>
+                                            ),
+                                        },
+                                    }}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            borderRadius: 2,
+                                            bgcolor: 'rgba(32, 167, 172, 0.04)',
+                                            transition: 'all 0.2s ease',
+                                            '&:hover': {
+                                                bgcolor:
+                                                    'rgba(32, 167, 172, 0.08)',
+                                            },
+                                            '&.Mui-focused': {
+                                                bgcolor: 'background.paper',
+                                            },
+                                        },
+                                    }}
+                                />
+                            </Box>
+                        </Stack>
+                    </Paper>
+                    {/* Activity Type Filter */}
+                    <Paper
+                        elevation={2}
+                        sx={{ p: 2, borderRadius: 2, width: '35%' }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                mb: 1,
+                                color: 'primary.main',
+                            }}
                         >
-                            <ListItemText primary="I'm going" />
-                        </MenuItem>
-                        <MenuItem
-                            selected={filter === 'isHost'}
-                            onClick={() => setFilter('isHost')}
+                            <FilterList sx={{ mr: 1 }} />
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 'bold' }}
+                            >
+                                Activity Type
+                            </Typography>
+                        </Box>
+                        <Divider sx={{ mb: 1 }} />
+                        <MenuList
+                            sx={{
+                                '& .MuiMenuItem-root:not(:last-child)': {
+                                    mb: 3, // Adds 4px margin-bottom (0.5 * 8px)
+                                },
+                            }}
                         >
-                            <ListItemText primary="I'm hosting" />
-                        </MenuItem>
-                    </MenuList>
-                </Paper>
+                            <MenuItem
+                                selected={filter === 'all'}
+                                onClick={() => setFilter('all')}
+                                sx={{
+                                    borderRadius: 1.5,
+
+                                    '&.Mui-selected': {
+                                        bgcolor: 'rgba(32, 167, 172, 0.12)',
+                                        '&:hover': {
+                                            bgcolor: 'rgba(32, 167, 172, 0.18)',
+                                        },
+                                    },
+                                }}
+                            >
+                                <ListItemText primary="All Activities" />
+                            </MenuItem>
+                            <MenuItem
+                                selected={filter === 'isGoing'}
+                                onClick={() => setFilter('isGoing')}
+                                sx={{
+                                    borderRadius: 2.5,
+                                    '&.Mui-selected': {
+                                        bgcolor: 'rgba(32, 167, 172, 0.12)',
+                                        '&:hover': {
+                                            bgcolor: 'rgba(32, 167, 172, 0.18)',
+                                        },
+                                    },
+                                }}
+                            >
+                                <ListItemText primary="I'm going" />
+                            </MenuItem>
+                            <MenuItem
+                                selected={filter === 'isHost'}
+                                onClick={() => setFilter('isHost')}
+                                sx={{
+                                    borderRadius: 1.5,
+                                    '&.Mui-selected': {
+                                        bgcolor: 'rgba(32, 167, 172, 0.12)',
+                                        '&:hover': {
+                                            bgcolor: 'rgba(32, 167, 172, 0.18)',
+                                        },
+                                    },
+                                }}
+                            >
+                                <ListItemText primary="I'm hosting" />
+                            </MenuItem>
+                        </MenuList>
+                    </Paper>
+                </Box>
+                {/* Date Filter */}
                 <Paper elevation={2} sx={{ p: 2, borderRadius: 2 }}>
                     <Box
                         sx={{

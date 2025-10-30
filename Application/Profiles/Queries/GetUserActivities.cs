@@ -24,13 +24,13 @@ public class GetUserActivities
             var today = DateTime.UtcNow;
 
             var query = context.ActivityAttendees
-                .Where(u => u.UserId == request.UserId)
+                .Where(x => x.UserId == request.UserId)
                 .AsQueryable();
 
             query = request.Filter switch
             {
-                "past" => query.Where(a => a.Activity.Date <= today),
-                "future" => query.Where(a => a.Activity.Date >= today),
+                "past" => query.Where(a => a.Activity.Date <= today ),
+                "future" => query.Where(a => a.Activity.Date >= today ),
                 _ => query.Where(a => a.IsHost), 
             };
 

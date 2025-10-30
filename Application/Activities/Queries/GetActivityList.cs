@@ -14,60 +14,82 @@ namespace Application.Activities.Queries;
 
 public class GetActivityList
 {
-    public class Query : IRequest<Result<PagedList<ActivityDto, DateTime?>>>
-    {
-        public required ActivityParams Params { get; set; }
-    }
+	public class Query : IRequest<Result<PagedList<ActivityDto, DateTime?>>>
+	{
+		public required ActivityParams Params { get; set; }
+	}
 
-    public class Handler(AppDbContext context, IMapper mapper, IUserAccessor userAccessor) 
-    : IRequestHandler<Query, Result<PagedList<ActivityDto, DateTime?>>>
-    {
-        public async Task<Result<PagedList<ActivityDto, DateTime?>>> Handle(Query request, CancellationToken cancellationToken)
-        {
-            var query = context.Activities
-                .Where(x => x.Date >= (request.Params.Cursor ?? request.Params.StartDate))
-                .AsQueryable();
+	public class Handler(AppDbContext context, IMapper mapper, IUserAccessor userAccessor)
+	: IRequestHandler<Query, Result<PagedList<ActivityDto, DateTime?>>>
+	{
+		public async Task<Result<PagedList<ActivityDto, DateTime?>>> Handle(Query request, CancellationToken cancellationToken)
+		{
+			var query = context.Activities
+				.Where(x => x.Date >= (request.Params.Cursor ?? request.Params.StartDate))
+				.AsQueryable();
 
-            if (!string.IsNullOrEmpty(request.Params.Filter))
-            {
-                query = request.Params.Filter switch
-                {
-                    "isGoing" => query.Where(x =>
-                        x.Attendees.Any(a => a.UserId == userAccessor.GetUserId())),
+			if (!string.IsNullOrEmpty(request.Params.Filter))
+			{
+				query = request.Params.Filter switch
+				{
+					"isGoing" => query.Where(x =>
+						x.Attendees.Any(a => a.UserId == userAccessor.GetUserId())),
 
-                    "isHost" => query.Where(x =>
-                        x.Attendees.Any(a => a.IsHost && a.UserId == userAccessor.GetUserId())),
+					"isHost" => query.Where(x =>
+						x.Attendees.Any(a => a.IsHost && a.UserId == userAccessor.GetUserId())),
 
-                    _ => query
-                };
-            }
+					_ => query
+				};
+			}
 
-            var projectedActivities = query
-            .OrderBy(x => x.Date)
-            .ProjectTo<ActivityDto>(mapper.ConfigurationProvider,
-                new { currentUserId = userAccessor.GetUserId() });
+		
+			if (!string.IsNullOrEmpty(request.Params.CategoryType))
+			{		
+				var categoryLower = request.Params.CategoryType.ToLower();
+				query = query.Where(x => x.Category.ToLower().Contains(categoryLower));
+			}
+
+		
+			if (!string.IsNullOrEmpty(request.Params.HostName))
+			{
+				
+				var hostNameLower = request.Params.HostName.ToLower();
+				query = query.Where(x =>
+					x.Attendees.Any(a =>
+						a.IsHost &&
+						a.User.DisplayName != null &&
+						a.User.DisplayName.ToLower().Contains(hostNameLower)
+					)
+				);
+			}
 
 
-            var activities = await projectedActivities
-                .Take(request.Params.PageSize + 1)
-                .ToListAsync(cancellationToken);
+			var projectedActivities = query
+				.OrderBy(x => x.Date)
+				.ProjectTo<ActivityDto>(mapper.ConfigurationProvider,
+					new { currentUserId = userAccessor.GetUserId() });
 
-            DateTime? nextCursor = null;
-            if (activities.Count > request.Params.PageSize)
-            {
-                nextCursor = activities.Last().Date;
-                activities.RemoveAt(activities.Count - 1);
-            }
 
-            return Result<PagedList<ActivityDto, DateTime?>>.Success
-            (
-                new PagedList<ActivityDto, DateTime?>
-                {
-                    Items = activities,
-                    NextCursor = nextCursor
-                }
-                
-            );
-        }
-    }
+			var activities = await projectedActivities
+				.Take(request.Params.PageSize + 1)
+				.ToListAsync(cancellationToken);
+
+			DateTime? nextCursor = null;
+			if (activities.Count > request.Params.PageSize)
+			{
+				nextCursor = activities.Last().Date;
+				activities.RemoveAt(activities.Count - 1);
+			}
+
+			return Result<PagedList<ActivityDto, DateTime?>>.Success
+			(
+				new PagedList<ActivityDto, DateTime?>
+				{
+					Items = activities,
+					NextCursor = nextCursor
+				}
+				
+			);
+		}
+	}
 }

@@ -19,16 +19,16 @@ export default function StarButton({ selected }: Props) {
                 >
                     <StarBorder
                         sx={{
-                            fontSize: 32,
+                            fontSize: 40,
                             color: 'white',
                             position: 'absolute',
                         }}
                     />
                     <Star
                         sx={{
-                            fontSize: 28,
+                            fontSize: 40,
                             color: selected
-                                ? 'rgba(255, 247, 0, 1)'
+                                ? 'rgba(255, 238, 0, 1)'
                                 : 'rgba(0, 0, 0, 0.75)',
                         }}
                     />

@@ -59,8 +59,10 @@ export default function LoginForm() {
                     gap={3}
                     color={'secondary.main'}
                 >
-                    <LockOpen fontSize="large" />
-                    <Typography variant="h4">Sign in</Typography>
+                    <LockOpen fontSize="large" color="primary" />
+                    <Typography variant="h4" color="primary">
+                        Sign in
+                    </Typography>
                 </Box>
                 <TextInput label="Email" name="email" control={control} />
                 <TextInput

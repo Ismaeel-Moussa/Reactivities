@@ -5,12 +5,13 @@ import ActivityDetailsHeader from './ActivityDetailsHeader';
 import ActivityDetailsInfo from './ActivityDetailsInfo';
 import ActivityDetailsChat from './ActivityDetailsChat';
 import ActivityDetailsSidebar from './ActivityDetailsSidebar';
+import ActivityDetailsSkeleton from './ActivityDetailsSkeleton';
 
 export default function ActivityDetailPage() {
     const { id } = useParams();
     const { activity, isLoadingActivity } = useActivities(id);
 
-    if (isLoadingActivity) return <Typography>Loading...</Typography>;
+    if (isLoadingActivity) return <ActivityDetailsSkeleton />;
     if (!activity) return <Typography>Activity not found</Typography>;
 
     return (

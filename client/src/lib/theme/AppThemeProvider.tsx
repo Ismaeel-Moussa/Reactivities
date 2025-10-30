@@ -77,11 +77,11 @@ export default function AppThemeProvider({ children }: Props) {
                     mode,
                     ...(mode === 'light'
                         ? {
-                              primary: { main: '#1976d2' },
+                              primary: { main: '#28969cff' },
                               background: { default: '#eee' },
                           }
                         : {
-                              primary: { main: '#1976d2' },
+                              primary: { main: '#28969cff' },
                               background: { default: '#121212' },
                           }),
                 },

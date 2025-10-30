@@ -3,6 +3,8 @@ import { makeAutoObservable } from 'mobx';
 export class ActivityStore {
     filter = 'all';
     startDate = new Date().toISOString();
+    hostName = '';
+    categoryType = '';
 
     constructor() {
         makeAutoObservable(this);
@@ -14,5 +16,12 @@ export class ActivityStore {
 
     setStartDate = (date: Date) => {
         this.startDate = date.toISOString();
+    };
+
+    setHostName = (hostName: string) => {
+        this.hostName = hostName;
+    };
+    setCategoryType = (categoryType: string) => {
+        this.categoryType = categoryType;
     };
 }

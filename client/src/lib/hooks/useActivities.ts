@@ -12,7 +12,7 @@ import { useStore } from './useStore';
 
 export const useActivities = (id?: string) => {
     const {
-        activityStore: { filter, startDate },
+        activityStore: { filter, startDate, hostName, categoryType },
     } = useStore();
     const queryClient = useQueryClient();
     const location = useLocation();
@@ -26,7 +26,7 @@ export const useActivities = (id?: string) => {
         fetchNextPage,
         hasNextPage,
     } = useInfiniteQuery<PagedList<Activity, string>>({
-        queryKey: ['activities', filter, startDate],
+        queryKey: ['activities', filter, startDate, hostName, categoryType],
         queryFn: async ({ pageParam = null }) => {
             const response = await agent.get<PagedList<Activity, string>>(
                 '/activities',
@@ -36,13 +36,15 @@ export const useActivities = (id?: string) => {
                         pageSize: 3,
                         filter,
                         startDate,
+                        hostName,
+                        categoryType,
                     },
                 }
             );
             return response.data;
         },
 
-        staleTime: 1000 * 60 * 5, // 5 min stale time
+        staleTime: 1000 * 60, // 1 min stale time
         placeholderData: keepPreviousData,
         initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
