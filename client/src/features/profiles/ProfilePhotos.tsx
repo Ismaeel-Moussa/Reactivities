@@ -8,9 +8,10 @@ import {
     ImageListItem,
     Typography,
     Skeleton,
-    IconButton,
     Fade,
     alpha,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import { useState } from 'react';
 import PhotoUploadWidget from '../../app/shared/components/PhotoUploadWidget';
@@ -31,6 +32,9 @@ export default function ProfilePhotos() {
     } = useProfile(id);
     const [editMode, setEditMode] = useState(false);
     const [hoveredPhoto, setHoveredPhoto] = useState<string | null>(null);
+    const theme = useTheme();
+    const isSx = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
 
     const handlePhotoUpload = (file: Blob) => {
         uploadPhoto.mutate(file, {
@@ -44,11 +48,21 @@ export default function ProfilePhotos() {
     if (loadingPhotos) {
         return (
             <Box>
-                <Box display="flex" justifyContent="space-between" mb={3}>
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    mb={3}
+                    flexDirection={{ xs: 'column', sm: 'row' }}
+                    gap={{ xs: 2, sm: 0 }}
+                >
                     <Skeleton width={100} height={40} />
                     <Skeleton width={120} height={40} />
                 </Box>
-                <ImageList cols={4} rowHeight={220} gap={12}>
+                <ImageList
+                    cols={isSx ? 2 : isSm ? 3 : 4}
+                    rowHeight={220}
+                    gap={12}
+                >
                     {[...Array(8)].map((_, index) => (
                         <ImageListItem key={index}>
                             <Skeleton
@@ -69,8 +83,19 @@ export default function ProfilePhotos() {
     return (
         <Box>
             {/* Header */}
-            <Box display="flex" justifyContent="space-between" mb={2}>
-                <Typography variant="h5" fontWeight={700}>
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                mb={2}
+                flexDirection={{ xs: 'column', sm: 'row' }}
+                gap={{ xs: 1.5, sm: 0 }}
+                alignItems={{ xs: 'flex-start', sm: 'center' }}
+            >
+                <Typography
+                    variant="h5"
+                    fontWeight={700}
+                    sx={{ fontSize: { xs: '1.25rem', md: '1.5rem' } }}
+                >
                     Photos
                     {!editMode && (
                         <Typography
@@ -78,14 +103,13 @@ export default function ProfilePhotos() {
                             variant="body2"
                             sx={{
                                 ml: 2,
-
                                 color: '#28969c',
                                 fontWeight: 600,
                                 bgcolor: 'rgba(40, 150, 156, 0.1)',
                                 px: 1.5,
                                 py: 0.7,
-
                                 borderRadius: 2,
+                                fontSize: { xs: '0.75rem', md: '0.875rem' },
                             }}
                         >
                             {photos.length}
@@ -97,10 +121,12 @@ export default function ProfilePhotos() {
                         onClick={() => setEditMode(!editMode)}
                         variant={editMode ? 'outlined' : 'contained'}
                         startIcon={<AddPhotoAlternate />}
+                        fullWidth={isSx ? true : false}
                         sx={{
                             textTransform: 'none',
                             fontWeight: 600,
                             borderRadius: 2,
+                            fontSize: { xs: '0.85rem', md: '0.95rem' },
                             ...(editMode
                                 ? {
                                       borderColor: '#28969c',
@@ -143,13 +169,13 @@ export default function ProfilePhotos() {
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                py: 8,
+                                py: { xs: 4, md: 8 },
                                 px: 2,
                             }}
                         >
                             <ImageNotSupported
                                 sx={{
-                                    fontSize: 64,
+                                    fontSize: { xs: 48, md: 64 },
                                     color: 'text.secondary',
                                     mb: 2,
                                     opacity: 0.5,
@@ -159,6 +185,7 @@ export default function ProfilePhotos() {
                                 variant="h6"
                                 color="text.secondary"
                                 gutterBottom
+                                sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}
                             >
                                 No photos yet
                             </Typography>
@@ -166,6 +193,9 @@ export default function ProfilePhotos() {
                                 variant="body2"
                                 color="text.secondary"
                                 mb={2}
+                                sx={{
+                                    fontSize: { xs: '0.8rem', md: '0.875rem' },
+                                }}
                             >
                                 Start building your photo gallery
                             </Typography>
@@ -190,12 +220,11 @@ export default function ProfilePhotos() {
                     ) : (
                         <Box
                             sx={{
-                                height: 440,
+                                height: { xs: 500, md: 440 },
                                 overflow: 'auto',
-                                pr: 2,
-                                // Modern Custom Scrollbar
+                                pr: { xs: 1, md: 2 },
                                 '&::-webkit-scrollbar': {
-                                    width: '10px',
+                                    width: '8px',
                                 },
                                 '&::-webkit-scrollbar-track': {
                                     background:
@@ -216,7 +245,11 @@ export default function ProfilePhotos() {
                                 },
                             }}
                         >
-                            <ImageList cols={4} rowHeight={250} gap={12}>
+                            <ImageList
+                                cols={isSx ? 2 : isSm ? 3 : 5}
+                                rowHeight={isSx ? 180 : 240}
+                                gap={isSx ? 8 : 12}
+                            >
                                 {photos.map((photo) => (
                                     <ImageListItem
                                         key={photo.id}
@@ -229,7 +262,7 @@ export default function ProfilePhotos() {
                                                 photo.url === profile?.imageUrl
                                                     ? '#28969c'
                                                     : 'divider',
-                                            transition: 'all 0.3s ',
+                                            transition: 'all 0.3s',
                                             '&:hover': {
                                                 boxShadow:
                                                     '0 12px 24px rgba(40, 150, 156, 0.25)',
@@ -267,17 +300,20 @@ export default function ProfilePhotos() {
                                             <Box
                                                 sx={{
                                                     position: 'absolute',
-                                                    bottom: 12,
-                                                    left: 12,
+                                                    bottom: { xs: 8, md: 12 },
+                                                    left: { xs: 8, md: 12 },
                                                     bgcolor: alpha(
                                                         '#28969c',
                                                         0.95
                                                     ),
                                                     color: 'white',
-                                                    px: 1.5,
-                                                    py: 0.75,
+                                                    px: { xs: 1, md: 1.5 },
+                                                    py: { xs: 0.5, md: 0.75 },
                                                     borderRadius: 1.5,
-                                                    fontSize: '0.7rem',
+                                                    fontSize: {
+                                                        xs: '0.6rem',
+                                                        md: '0.7rem',
+                                                    },
                                                     fontWeight: 700,
                                                     letterSpacing: '0.5px',
                                                     backdropFilter: 'blur(8px)',
@@ -309,68 +345,30 @@ export default function ProfilePhotos() {
                                                             'space-between',
                                                         alignItems:
                                                             'flex-start',
-                                                        p: 1.5,
+                                                        p: { xs: 1, md: 1.5 },
                                                     }}
                                                 >
-                                                    <IconButton
+                                                    <StarButton
                                                         onClick={() =>
                                                             setMainPhoto.mutate(
                                                                 photo
                                                             )
                                                         }
-                                                        size="medium"
-                                                        sx={{
-                                                            bgcolor: alpha(
-                                                                '#fff',
-                                                                0.95
-                                                            ),
-                                                            width: 42,
-                                                            height: 42,
-                                                            '&:hover': {
-                                                                bgcolor: '#fff',
-                                                                transform:
-                                                                    'scale(1.1)',
-                                                            },
-                                                            transition:
-                                                                'all 0.2s ease',
-                                                        }}
-                                                    >
-                                                        <StarButton
-                                                            selected={
-                                                                photo.url ===
-                                                                profile?.imageUrl
-                                                            }
-                                                        />
-                                                    </IconButton>
+                                                        selected={
+                                                            photo.url ===
+                                                            profile?.imageUrl
+                                                        }
+                                                    />
 
                                                     {profile?.imageUrl !==
                                                         photo.url && (
-                                                        <IconButton
+                                                        <DeleteButton
                                                             onClick={() =>
                                                                 deletePhoto.mutate(
                                                                     photo.id
                                                                 )
                                                             }
-                                                            size="medium"
-                                                            sx={{
-                                                                bgcolor: alpha(
-                                                                    '#fff',
-                                                                    0.95
-                                                                ),
-                                                                width: 42,
-                                                                height: 42,
-                                                                '&:hover': {
-                                                                    bgcolor:
-                                                                        '#fff',
-                                                                    transform:
-                                                                        'scale(1.1)',
-                                                                },
-                                                                transition:
-                                                                    'all 0.2s ease',
-                                                            }}
-                                                        >
-                                                            <DeleteButton />
-                                                        </IconButton>
+                                                        />
                                                     )}
                                                 </Box>
                                             </Fade>

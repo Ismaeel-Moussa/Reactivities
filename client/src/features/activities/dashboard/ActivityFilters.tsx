@@ -12,6 +12,7 @@ import {
     useTheme,
     TextField,
     InputAdornment,
+    Button,
 } from '@mui/material';
 import Calendar from 'react-calendar';
 import { useStore } from '../../../lib/hooks/useStore';
@@ -37,7 +38,7 @@ const CalendarGlobalStyles = () => {
                     '--cal-nav-bg-hover': theme.palette.action.hover,
                     '--cal-tile-bg-hover': theme.palette.action.hover,
                     '--cal-today-bg-hover': theme.palette.action.selected,
-                    '--cal-border-radius': '40px 10px',
+                    '--cal-border-radius': '20px 10px',
                     '--cal-transition-speed': '0.3s',
                 },
                 '.react-calendar': {
@@ -123,7 +124,11 @@ const CalendarGlobalStyles = () => {
     );
 };
 
-const ActivityFilters = observer(() => {
+type Props = {
+    onClose?: () => void;
+};
+
+const ActivityFilters = observer(({ onClose }: Props) => {
     const {
         activityStore: {
             setFilter,
@@ -145,11 +150,35 @@ const ActivityFilters = observer(() => {
             <CalendarGlobalStyles />
 
             <Stack spacing={3}>
-                <Box display={'flex'} gap={3}>
+                {/* Mobile Title */}
+                {onClose && (
+                    <Typography
+                        variant="h5"
+                        sx={{
+                            fontWeight: 700,
+                            color: 'text.primary',
+                            display: { xs: 'block', md: 'none' },
+                        }}
+                    >
+                        Filter Activities
+                    </Typography>
+                )}
+
+                <Box
+                    display={'flex'}
+                    gap={3}
+                    sx={{
+                        flexDirection: { xs: 'column', md: 'row' },
+                    }}
+                >
                     {/* Search Filters */}
                     <Paper
                         elevation={2}
-                        sx={{ p: 2.5, borderRadius: 2, width: '65%' }}
+                        sx={{
+                            p: { xs: 2, md: 2.5 },
+                            borderRadius: 2,
+                            width: { xs: '100%', md: '65%' },
+                        }}
                     >
                         <Box
                             sx={{
@@ -159,10 +188,18 @@ const ActivityFilters = observer(() => {
                                 color: 'primary.main',
                             }}
                         >
-                            <FilterList sx={{ mr: 1 }} />
+                            <FilterList
+                                sx={{
+                                    mr: 1,
+                                    fontSize: { xs: '1.25rem', md: '1.5rem' },
+                                }}
+                            />
                             <Typography
                                 variant="h6"
-                                sx={{ fontWeight: 'bold' }}
+                                sx={{
+                                    fontWeight: 'bold',
+                                    fontSize: { xs: '1rem', md: '1.25rem' },
+                                }}
                             >
                                 Search Filters
                             </Typography>
@@ -193,7 +230,10 @@ const ActivityFilters = observer(() => {
                                             color: 'text.secondary',
                                             textTransform: 'uppercase',
                                             letterSpacing: '0.5px',
-                                            fontSize: '0.75rem',
+                                            fontSize: {
+                                                xs: '0.688rem',
+                                                md: '0.75rem',
+                                            },
                                         }}
                                     >
                                         Filter by Host
@@ -203,13 +243,11 @@ const ActivityFilters = observer(() => {
                                     fullWidth
                                     size="small"
                                     placeholder="Write to search..."
-                                    // --- UPDATED PROPS ---
                                     value={localHostName}
                                     onChange={(e) => {
                                         setLocalHostName(e.target.value);
                                         setHostName(e.target.value);
                                     }}
-                                    // ---
                                     slotProps={{
                                         input: {
                                             startAdornment: (
@@ -264,7 +302,10 @@ const ActivityFilters = observer(() => {
                                             color: 'text.secondary',
                                             textTransform: 'uppercase',
                                             letterSpacing: '0.5px',
-                                            fontSize: '0.75rem',
+                                            fontSize: {
+                                                xs: '0.688rem',
+                                                md: '0.75rem',
+                                            },
                                         }}
                                     >
                                         Filter by Category
@@ -274,7 +315,6 @@ const ActivityFilters = observer(() => {
                                     fullWidth
                                     size="small"
                                     placeholder="Write to search..."
-                                    // --- UPDATED PROPS ---
                                     value={localCategory}
                                     onChange={(e) => {
                                         setLocalCategory(e.target.value);
@@ -312,10 +352,15 @@ const ActivityFilters = observer(() => {
                             </Box>
                         </Stack>
                     </Paper>
+
                     {/* Activity Type Filter */}
                     <Paper
                         elevation={2}
-                        sx={{ p: 2, borderRadius: 2, width: '35%' }}
+                        sx={{
+                            p: { xs: 2, md: 2 },
+                            borderRadius: 2,
+                            width: { xs: '100%', md: '35%' },
+                        }}
                     >
                         <Box
                             sx={{
@@ -325,10 +370,18 @@ const ActivityFilters = observer(() => {
                                 color: 'primary.main',
                             }}
                         >
-                            <FilterList sx={{ mr: 1 }} />
+                            <FilterList
+                                sx={{
+                                    mr: 1,
+                                    fontSize: { xs: '1.25rem', md: '1.5rem' },
+                                }}
+                            />
                             <Typography
                                 variant="h6"
-                                sx={{ fontWeight: 'bold' }}
+                                sx={{
+                                    fontWeight: 'bold',
+                                    fontSize: { xs: '1rem', md: '1.25rem' },
+                                }}
                             >
                                 Activity Type
                             </Typography>
@@ -337,7 +390,7 @@ const ActivityFilters = observer(() => {
                         <MenuList
                             sx={{
                                 '& .MuiMenuItem-root:not(:last-child)': {
-                                    mb: 3, // Adds 4px margin-bottom (0.5 * 8px)
+                                    mb: { xs: 1, md: 3 },
                                 },
                             }}
                         >
@@ -346,7 +399,7 @@ const ActivityFilters = observer(() => {
                                 onClick={() => setFilter('all')}
                                 sx={{
                                     borderRadius: 1.5,
-
+                                    fontSize: { xs: '0.875rem', md: '1rem' },
                                     '&.Mui-selected': {
                                         bgcolor: 'rgba(32, 167, 172, 0.12)',
                                         '&:hover': {
@@ -362,6 +415,7 @@ const ActivityFilters = observer(() => {
                                 onClick={() => setFilter('isGoing')}
                                 sx={{
                                     borderRadius: 2.5,
+                                    fontSize: { xs: '0.875rem', md: '1rem' },
                                     '&.Mui-selected': {
                                         bgcolor: 'rgba(32, 167, 172, 0.12)',
                                         '&:hover': {
@@ -377,6 +431,7 @@ const ActivityFilters = observer(() => {
                                 onClick={() => setFilter('isHost')}
                                 sx={{
                                     borderRadius: 1.5,
+                                    fontSize: { xs: '0.875rem', md: '1rem' },
                                     '&.Mui-selected': {
                                         bgcolor: 'rgba(32, 167, 172, 0.12)',
                                         '&:hover': {
@@ -390,8 +445,15 @@ const ActivityFilters = observer(() => {
                         </MenuList>
                     </Paper>
                 </Box>
+
                 {/* Date Filter */}
-                <Paper elevation={2} sx={{ p: 2, borderRadius: 2 }}>
+                <Paper
+                    elevation={2}
+                    sx={{
+                        p: { xs: 2, md: 2 },
+                        borderRadius: 2,
+                    }}
+                >
                     <Box
                         sx={{
                             display: 'flex',
@@ -400,8 +462,19 @@ const ActivityFilters = observer(() => {
                             color: 'primary.main',
                         }}
                     >
-                        <Event sx={{ mr: 1 }} />
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                        <Event
+                            sx={{
+                                mr: 1,
+                                fontSize: { xs: '1.25rem', md: '1.5rem' },
+                            }}
+                        />
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                fontWeight: 'bold',
+                                fontSize: { xs: '1rem', md: '1.25rem' },
+                            }}
+                        >
                             Select Date
                         </Typography>
                     </Box>
@@ -411,6 +484,31 @@ const ActivityFilters = observer(() => {
                         onChange={(date) => setStartDate(date as Date)}
                     />
                 </Paper>
+
+                {/* Mobile Apply Button */}
+
+                {/* {onClose && (
+                    <Button
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        onClick={onClose}
+                        sx={{
+                            display: { xs: 'block', md: 'none' },
+                            borderRadius: 2,
+                            py: 1.5,
+                            fontSize: '1rem',
+                            fontWeight: 600,
+                            textTransform: 'none',
+                            boxShadow: 'none',
+                            '&:hover': {
+                                boxShadow: '0 4px 12px rgba(32, 167, 172, 0.3)',
+                            },
+                        }}
+                    >
+                        Apply Filters
+                    </Button>
+                )} */}
             </Stack>
         </>
     );

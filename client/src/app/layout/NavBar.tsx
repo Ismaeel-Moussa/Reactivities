@@ -6,19 +6,24 @@ import {
     MenuItem,
     Typography,
     CircularProgress,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
-import { NavLink } from 'react-router';
+import { Link } from 'react-router';
 import MenuItemLink from '../shared/components/MenuItemLink';
 import { useStore } from '../../lib/hooks/useStore';
 import { Observer } from 'mobx-react-lite';
 import { useAccount } from '../../lib/hooks/useAccount';
 import UserMenu from './UserMenu';
 import ThemeToggleButton from './ThemeToggleButton';
+import MobileMenu from './MobileMenu';
 import Groups2Icon from '@mui/icons-material/Groups2';
 
 export default function NavBar() {
     const { uiStore } = useStore();
     const { currentUser } = useAccount();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     return (
         <Box>
@@ -37,19 +42,25 @@ export default function NavBar() {
                         sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
-                            py: 1,
+                            py: { xs: 0.5, md: 1 },
+                            minHeight: { xs: 56, md: 64 },
                         }}
                     >
+                        {/* Mobile Menu - Left Side */}
+                        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                            <MobileMenu />
+                        </Box>
+
                         {/* Logo Section */}
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <MenuItem
-                                component={NavLink}
+                                component={Link}
                                 to="/"
                                 sx={{
                                     display: 'flex',
-                                    gap: 1.5,
+                                    gap: { xs: 1, md: 1.5 },
                                     alignItems: 'center',
-                                    px: 1,
+                                    px: { xs: 0.5, md: 1 },
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.08)',
@@ -59,13 +70,12 @@ export default function NavBar() {
                             >
                                 <Groups2Icon
                                     sx={{
-                                        fontSize: 40,
+                                        fontSize: { xs: 32, md: 40 },
                                         color: 'white',
                                         mb: 0.5,
                                     }}
                                 />
 
-                                {/* 1. Wrap Typography and Observer in a relative Box */}
                                 <Box
                                     sx={{
                                         position: 'relative',
@@ -83,26 +93,33 @@ export default function NavBar() {
                                             WebkitBackgroundClip: 'text',
                                             WebkitTextFillColor: 'transparent',
                                             letterSpacing: '0.5px',
+                                            fontSize: {
+                                                xs: '1.1rem',
+                                                md: '1.5rem',
+                                            },
                                         }}
                                     >
                                         Reactivities
                                     </Typography>
 
-                                    {/* 3. Spinner is now inside the Box, positioned absolutely */}
+                                    {/* Loading Spinner */}
                                     <Observer>
                                         {() =>
                                             uiStore.isLoading ? (
                                                 <CircularProgress
-                                                    size={26}
+                                                    size={isMobile ? 20 : 26}
                                                     thickness={4}
                                                     sx={{
                                                         color: '#ffd700',
-                                                        position: 'absolute', // As requested
-                                                        right: -50, // Position at the end of the parent Box
-                                                        top: 2, // Center vertically
+                                                        position: 'absolute',
+                                                        right: {
+                                                            xs: -35,
+                                                            md: -45,
+                                                        },
+                                                        top: 2,
                                                         transform:
-                                                            'translateY(-50%)', // Adjust centering
-                                                        ml: 1, // Add 1 unit of margin
+                                                            'translateY(-50%)',
+                                                        ml: 1,
                                                     }}
                                                 />
                                             ) : null
@@ -112,10 +129,10 @@ export default function NavBar() {
                             </MenuItem>
                         </Box>
 
-                        {/* Navigation Links */}
+                        {/* Desktop Navigation Links - Hidden on Mobile */}
                         <Box
                             sx={{
-                                display: 'flex',
+                                display: { xs: 'none', md: 'flex' },
                                 gap: 1,
                             }}
                         >
@@ -129,15 +146,25 @@ export default function NavBar() {
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: 1,
+                                gap: { xs: 0.5, md: 1 },
                             }}
                         >
-                            {/* --- SPINNER REMOVED FROM HERE --- */}
-
+                            {/* Desktop User Menu - Hidden on Mobile */}
                             {currentUser ? (
-                                <UserMenu />
+                                <Box
+                                    sx={{
+                                        display: { xs: 'none', md: 'block' },
+                                    }}
+                                >
+                                    <UserMenu />
+                                </Box>
                             ) : (
-                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                <Box
+                                    sx={{
+                                        display: { xs: 'none', md: 'flex' },
+                                        gap: 1,
+                                    }}
+                                >
                                     <MenuItemLink to="/login">
                                         Login
                                     </MenuItemLink>
@@ -146,6 +173,7 @@ export default function NavBar() {
                                     </MenuItemLink>
                                 </Box>
                             )}
+
                             <ThemeToggleButton />
                         </Box>
                     </Toolbar>

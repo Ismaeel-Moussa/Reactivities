@@ -7,12 +7,15 @@ import {
     ListItemAvatar,
     Box,
     ListItemText,
+    useTheme,
+    useMediaQuery,
 } from '@mui/material';
 import AvatarPopover from '../../../app/shared/components/AvatarPopover';
 import { useAccount } from '../../../lib/hooks/useAccount';
 import { Link } from 'react-router';
 import { People, Person } from '@mui/icons-material';
 import Groups2Icon from '@mui/icons-material/Groups2';
+
 type Props = {
     activity: Activity;
 };
@@ -20,15 +23,18 @@ type Props = {
 export default function ActivityDetailsSidebar({ activity }: Props) {
     const { currentUser } = useAccount();
     const { attendees, hostId } = activity;
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     if (!attendees || attendees.length === 0) {
         return (
             <Paper
                 elevation={3}
                 sx={{
-                    borderRadius: 3,
+                    borderRadius: isMobile ? 2 : 3,
                     overflow: 'hidden',
                     textAlign: 'center',
+                    mb: isMobile ? 2 : 0,
                 }}
             >
                 <Box
@@ -36,14 +42,30 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                         background:
                             'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0d9488 100%)',
                         color: 'white',
-                        p: 4,
+                        p: isMobile ? 3 : 4,
                     }}
                 >
-                    <People sx={{ fontSize: 56, mb: 2, opacity: 0.9 }} />
-                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                    <People
+                        sx={{
+                            fontSize: isMobile ? 48 : 56,
+                            mb: 2,
+                            opacity: 0.9,
+                        }}
+                    />
+                    <Typography
+                        variant={isMobile ? 'body1' : 'h6'}
+                        sx={{ fontWeight: 700 }}
+                    >
                         No one is going yet
                     </Typography>
-                    <Typography variant="body2" sx={{ mt: 1, opacity: 0.9 }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            mt: 1,
+                            opacity: 0.9,
+                            fontSize: isMobile ? '0.85rem' : '0.875rem',
+                        }}
+                    >
                         Be the first to join this activity!
                     </Typography>
                 </Box>
@@ -52,7 +74,16 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
     }
 
     return (
-        <Box>
+        <Box
+            sx={{
+                mb: isMobile ? 2 : 0,
+                position: isMobile ? 'relative' : 'sticky',
+                top: isMobile ? 0 : 24,
+                maxHeight: isMobile ? '26.7rem' : '39.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+        >
             <Paper
                 elevation={3}
                 square
@@ -61,8 +92,9 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                     background:
                         'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0d9488 100%)',
                     color: 'white',
-                    p: 3,
-                    borderRadius: '12px 12px 0 0',
+                    p: isMobile ? 2.5 : 3,
+                    borderRadius: isMobile ? '8px 8px 0 0' : '12px 12px 0 0',
+                    flexShrink: 0,
                 }}
             >
                 <Box
@@ -70,31 +102,33 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: 2.5,
+                        gap: isMobile ? 2 : 2.5,
+                        flexDirection:
+                            isMobile && attendees.length > 9 ? 'column' : 'row',
                     }}
                 >
                     {attendees.length === 1 ? (
-                        <Person sx={{ fontSize: 60 }} />
+                        <Person sx={{ fontSize: isMobile ? 48 : 60 }} />
                     ) : attendees.length === 2 ? (
-                        <People sx={{ fontSize: 60 }} />
+                        <People sx={{ fontSize: isMobile ? 48 : 60 }} />
                     ) : (
-                        <Groups2Icon sx={{ fontSize: 60 }} />
+                        <Groups2Icon sx={{ fontSize: isMobile ? 48 : 60 }} />
                     )}
 
                     <Box
                         display={'flex'}
                         alignItems={'center'}
                         justifyContent={'space-between'}
-                        gap={2}
+                        gap={isMobile ? 1.5 : 2}
                     >
                         <Typography
-                            variant="h4"
+                            variant={isMobile ? 'h5' : 'h4'}
                             sx={{ fontWeight: 500, lineHeight: 1.2 }}
                         >
                             {attendees.length}
                         </Typography>
                         <Typography
-                            variant="h6"
+                            variant={isMobile ? 'body1' : 'h6'}
                             sx={{ opacity: 0.95, fontWeight: 500 }}
                         >
                             {attendees.length === 1
@@ -110,22 +144,57 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                 square
                 sx={{
                     borderTop: 'none',
-                    borderRadius: '0 0 12px 12px',
+                    borderRadius: isMobile ? '0 0 8px 8px' : '0 0 12px 12px',
                     overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: 0,
+                    flex: 1,
+                    maxHeight: isMobile ? '400px' : 'none',
                 }}
             >
-                <List sx={{ width: '100%', p: 0 }}>
+                <List
+                    sx={{
+                        width: '100%',
+                        p: 0,
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
+                        // Desktop webkit browsers
+                        '&::-webkit-scrollbar': {
+                            width: '8px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            backgroundColor: 'rgba(0,0,0,0.05)',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            backgroundColor: '#0d9488',
+                            borderRadius: '4px',
+                            '&:hover': {
+                                backgroundColor: '#0f766e',
+                            },
+                        },
+                        // Firefox
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: '#0d9488 rgba(0,0,0,0.05)',
+                        // Smooth scrolling for mobile
+                        WebkitOverflowScrolling: 'touch',
+                        // Reserve space for scrollbar
+                        scrollbarGutter: 'stable',
+                    }}
+                >
                     {attendees.map((attendee, index) => (
                         <ListItem
                             key={attendee.id}
                             divider={index < attendees.length - 1}
                             sx={{
-                                py: 2.5,
-                                px: 2.5,
+                                py: isMobile ? 2 : 2.5,
+                                px: isMobile ? 2 : 2.5,
                                 transition: 'all 0.2s ease',
                                 '&:hover': {
                                     backgroundColor: 'action.hover',
-                                    transform: 'translateX(4px)',
+                                    transform: isMobile
+                                        ? 'none'
+                                        : 'translateX(4px)',
                                 },
                             }}
                         >
@@ -133,9 +202,9 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                                 <AvatarPopover
                                     profile={attendee}
                                     sx={{
-                                        width: 64,
-                                        height: 64,
-                                        mr: 2,
+                                        width: isMobile ? 52 : 64,
+                                        height: isMobile ? 52 : 64,
+                                        mr: isMobile ? 1.5 : 2,
                                         border: '3px solid',
                                         borderColor:
                                             attendee.id === hostId
@@ -160,12 +229,15 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                                 >
                                     <Box>
                                         <Typography
-                                            variant="h6"
+                                            variant={isMobile ? 'body1' : 'h6'}
                                             sx={{
                                                 fontWeight: 700,
                                                 textDecoration: 'none',
                                                 color: 'text.primary',
                                                 transition: 'color 0.2s ease',
+                                                fontSize: isMobile
+                                                    ? '0.95rem'
+                                                    : '1.25rem',
                                                 '&:hover': {
                                                     color: '#0d9488',
                                                     textDecoration: 'underline',
@@ -185,6 +257,9 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                                                         color: '#f59e0b',
                                                         fontWeight: 600,
                                                         mt: 0.25,
+                                                        fontSize: isMobile
+                                                            ? '0.8rem'
+                                                            : '0.875rem',
                                                     }}
                                                 >
                                                     Following
@@ -200,11 +275,13 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                                                 bgcolor: '#e3f2fd',
                                                 color: '#2600ffff',
                                                 fontWeight: 700,
-                                                fontSize: '0.75rem',
+                                                fontSize: isMobile
+                                                    ? '0.7rem'
+                                                    : '0.75rem',
                                                 border: '1.5px solid #836dffff',
                                                 textTransform: 'uppercase',
                                                 letterSpacing: 0.5,
-                                                px: 1,
+                                                px: isMobile ? 0.75 : 1,
                                             }}
                                         />
                                     )}

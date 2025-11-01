@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Button,
     Card,
@@ -11,9 +10,17 @@ import {
     Divider,
     Stack,
     CardActions,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import { Link } from 'react-router';
-import { AccessTime, Place, PersonOutline } from '@mui/icons-material';
+import {
+    AccessTime,
+    Place,
+    PersonOutline,
+    Category,
+    Visibility,
+} from '@mui/icons-material';
 import { formatDate } from '../../../lib/util/util';
 import AvatarPopover from '../../../app/shared/components/AvatarPopover';
 
@@ -22,20 +29,12 @@ type Props = {
 };
 
 export default function ActivityCard({ activity }: Props) {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const numberOfAttendeesToShow = isMobile ? 5 : 7;
+
     const getStatusChips = () => {
         const chipsToShow = [];
-
-        if (activity.isCancelled) {
-            chipsToShow.push(
-                <Chip
-                    key="cancelled"
-                    label="Cancelled"
-                    color="error"
-                    size="small"
-                    sx={{ fontWeight: 600 }}
-                />
-            );
-        }
 
         if (activity.isHost) {
             chipsToShow.push(
@@ -67,13 +66,25 @@ export default function ActivityCard({ activity }: Props) {
             );
         }
 
+        if (activity.isCancelled) {
+            chipsToShow.push(
+                <Chip
+                    key="cancelled"
+                    label="Cancelled"
+                    color="error"
+                    size="small"
+                    sx={{ fontWeight: 600 }}
+                />
+            );
+        }
+
         if (chipsToShow.length === 0) {
             return null;
         }
 
         return (
-            <Box sx={{ mr: 2, mt: 1.5 }}>
-                <Stack spacing={1.5} direction="row">
+            <Box sx={{ mr: { xs: 0, sm: 2 }, my: { xs: 1 } }}>
+                <Stack spacing={1} direction={'row'}>
                     {chipsToShow}
                 </Stack>
             </Box>
@@ -84,14 +95,14 @@ export default function ActivityCard({ activity }: Props) {
         <Card
             elevation={2}
             sx={{
-                mb: 3,
-                borderRadius: 3,
+                mb: { xs: 2, md: 3 },
+                borderRadius: { xs: 2, md: 3 },
                 border: '1px solid',
                 borderColor: 'divider',
                 transition: 'all 0.3s ease',
                 '&:hover': {
                     boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-                    transform: 'translateY(-2px)',
+                    transform: { xs: 'none', md: 'translateY(-2px)' },
                     borderColor: 'primary.main',
                 },
             }}
@@ -103,8 +114,9 @@ export default function ActivityCard({ activity }: Props) {
                         component={Link}
                         to={`/profiles/${activity.hostId}`}
                         sx={{
-                            width: 60,
-                            height: 60,
+                            mb: { xs: 1 },
+                            width: { xs: 50, md: 60 },
+                            height: { xs: 50, md: 60 },
                             transition: 'transform 0.2s ease',
                             border: '3px solid',
                             borderColor: 'primary.main',
@@ -123,8 +135,7 @@ export default function ActivityCard({ activity }: Props) {
                         variant="h6"
                         sx={{
                             fontWeight: 700,
-                            fontSize: '1.1rem',
-                            mb: 0.5,
+                            fontSize: { xs: '1rem', md: '1.1rem' },
                             color: 'text.primary',
                         }}
                     >
@@ -134,7 +145,11 @@ export default function ActivityCard({ activity }: Props) {
                 subheader={
                     <Typography
                         variant="body2"
-                        sx={{ color: 'text.secondary' }}
+                        sx={{
+                            color: 'text.secondary',
+                            fontSize: { xs: '0.813rem', md: '0.875rem' },
+                            mt: 0.5,
+                        }}
                     >
                         Hosted by{' '}
                         <Box
@@ -153,61 +168,121 @@ export default function ActivityCard({ activity }: Props) {
                         </Box>
                     </Typography>
                 }
-                sx={{ pb: 1 }}
+                sx={{
+                    pb: 1,
+                    px: { xs: 2, md: 2 },
+                    pt: { xs: 2, md: 2 },
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'flex-start', sm: 'center' },
+                    '& .MuiCardHeader-action': {
+                        mt: { xs: 1, sm: 0 },
+                        mr: { xs: 0, sm: 0 },
+                        alignSelf: { xs: 'flex-start', sm: 'auto' },
+                    },
+                }}
             />
 
-            <CardContent sx={{ pt: 1, pb: 2 }}>
-                {/* Date and Location Info */}
+            <CardContent
+                sx={{
+                    pt: 1,
+                    pb: 2,
+                    px: { xs: 2, md: 2 },
+                }}
+            >
+                {/* Category, Date and Location Info */}
                 <Stack spacing={1.5} sx={{ mb: 3 }}>
+                    {/* Category */}
                     <Box display="flex" alignItems="center" gap={1}>
                         <Box
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: 36,
-                                height: 36,
+                                width: { xs: 32, md: 36 },
+                                height: { xs: 32, md: 36 },
+                                borderRadius: 2,
+                                bgcolor: 'rgba(32, 167, 172, 0.1)',
+                            }}
+                        >
+                            <Category
+                                sx={{
+                                    fontSize: { xs: '1rem', md: '1.1rem' },
+                                    color: 'primary.main',
+                                }}
+                            />
+                        </Box>
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                fontWeight: 500,
+                                color: 'text.primary',
+                                fontSize: { xs: '0.813rem', md: '0.875rem' },
+                                textTransform: 'capitalize',
+                            }}
+                        >
+                            {activity.category}
+                        </Typography>
+                    </Box>
+
+                    {/* Date */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: { xs: 32, md: 36 },
+                                height: { xs: 32, md: 36 },
                                 borderRadius: 2,
                                 bgcolor: 'rgba(32, 167, 172, 0.1)',
                             }}
                         >
                             <AccessTime
                                 sx={{
-                                    fontSize: '1.1rem',
+                                    fontSize: { xs: '1rem', md: '1.1rem' },
                                     color: 'primary.main',
                                 }}
                             />
                         </Box>
                         <Typography
                             variant="body2"
-                            sx={{ fontWeight: 500, color: 'text.primary' }}
+                            sx={{
+                                fontWeight: 500,
+                                color: 'text.primary',
+                                fontSize: { xs: '0.813rem', md: '0.875rem' },
+                            }}
                         >
                             {formatDate(activity.date)}
                         </Typography>
                     </Box>
 
+                    {/* Location */}
                     <Box display="flex" alignItems="center" gap={1}>
                         <Box
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: 36,
-                                height: 36,
+                                width: { xs: 32, md: 36 },
+                                height: { xs: 32, md: 36 },
                                 borderRadius: 2,
                                 bgcolor: 'rgba(32, 167, 172, 0.1)',
                             }}
                         >
                             <Place
                                 sx={{
-                                    fontSize: '1.1rem',
+                                    fontSize: { xs: '1rem', md: '1.1rem' },
                                     color: 'primary.main',
                                 }}
                             />
                         </Box>
                         <Typography
                             variant="body2"
-                            sx={{ fontWeight: 500, color: 'text.primary' }}
+                            sx={{
+                                fontWeight: 500,
+                                color: 'text.primary',
+                                fontSize: { xs: '0.813rem', md: '0.875rem' },
+                            }}
                         >
                             {activity.venue}, {activity.city}
                         </Typography>
@@ -218,11 +293,18 @@ export default function ActivityCard({ activity }: Props) {
                 <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1.5}>
                         <PersonOutline
-                            sx={{ fontSize: '1.1rem', color: 'text.secondary' }}
+                            sx={{
+                                fontSize: { xs: '1rem', md: '1.1rem' },
+                                color: 'text.secondary',
+                            }}
                         />
                         <Typography
                             variant="body2"
-                            sx={{ fontWeight: 600, color: 'text.secondary' }}
+                            sx={{
+                                fontWeight: 600,
+                                color: 'text.secondary',
+                                fontSize: { xs: '0.813rem', md: '0.875rem' },
+                            }}
                         >
                             Attendees: ( {activity.attendees.length} )
                         </Typography>
@@ -233,7 +315,7 @@ export default function ActivityCard({ activity }: Props) {
                         gap={1}
                         sx={{
                             bgcolor: 'rgba(32, 167, 172, 0.04)',
-                            p: 2,
+                            p: { xs: 1.5, md: 2 },
                             borderRadius: 2,
                             border: '1px solid',
                             borderColor: 'rgba(32, 167, 172, 0.1)',
@@ -247,31 +329,56 @@ export default function ActivityCard({ activity }: Props) {
                             },
                         }}
                     >
-                        {activity.attendees.map((attendee) => (
-                            <AvatarPopover
-                                profile={attendee}
-                                key={attendee.id}
-                                sx={{
-                                    width: 50,
-                                    height: 50,
-                                }}
-                            />
-                        ))}
-                        {activity.attendees.length > 8 && (
+                        {activity.attendees
+                            .slice(0, numberOfAttendeesToShow)
+                            .map((attendee) => (
+                                <AvatarPopover
+                                    profile={attendee}
+                                    key={attendee.id}
+                                    sx={{
+                                        width: { xs: 40, md: 50 },
+                                        height: { xs: 40, md: 50 },
+                                        flexShrink: 0,
+                                    }}
+                                />
+                            ))}
+                        {activity.attendees.length >
+                            numberOfAttendeesToShow && (
                             <Avatar
                                 sx={{
+                                    color: 'white',
                                     bgcolor: 'primary.main',
-                                    width: 40,
-                                    height: 40,
-                                    fontSize: '0.875rem',
+                                    width: { xs: 40, md: 50 },
+                                    height: { xs: 40, md: 50 },
+                                    fontSize: { xs: '0.8rem', md: '0.9rem' },
                                     fontWeight: 600,
+                                    flexShrink: 0,
                                 }}
                             >
-                                +{activity.attendees.length - 8}
+                                +
+                                {activity.attendees.length -
+                                    numberOfAttendeesToShow}
                             </Avatar>
                         )}
                     </Box>
                 </Box>
+
+                {/* Description - Only visible on mobile, hidden on desktop */}
+                <Typography
+                    variant="body2"
+                    sx={{
+                        color: 'text.secondary',
+                        fontSize: '0.813rem',
+                        mt: 2,
+                        display: { xs: '-webkit-box', md: 'none' },
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                    }}
+                >
+                    {activity.description}
+                </Typography>
             </CardContent>
 
             <Divider />
@@ -279,38 +386,28 @@ export default function ActivityCard({ activity }: Props) {
             {/* Footer Section */}
             <CardActions
                 sx={{
-                    justifyContent: 'space-between',
+                    justifyContent: { xs: 'center', md: 'space-between' },
                     alignItems: 'center',
-                    px: 2.5,
-                    py: 2,
+                    px: { xs: 2, md: 2.5 },
+                    py: { xs: 1.5, md: 2 },
                 }}
             >
-                <Box display="flex" alignItems="center" gap={2} flex={1}>
-                    <Chip
-                        label={activity.category}
-                        size="small"
-                        sx={{
-                            bgcolor: 'rgba(32, 167, 172, 0.1)',
-                            color: 'primary.main',
-                            fontWeight: 700,
-                            fontSize: '0.75rem',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px',
-                            border: '1px solid rgba(32, 167, 172, 0.3)',
-                        }}
-                    />
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            color: 'text.secondary',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                        }}
-                    >
-                        {activity.description}
-                    </Typography>
-                </Box>
+                {/* Description - Only visible on desktop */}
+                <Typography
+                    variant="body2"
+                    sx={{
+                        color: 'text.secondary',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        fontSize: '0.875rem',
+                        display: { xs: 'none', md: 'block' },
+                        flex: 1,
+                        mr: 2,
+                    }}
+                >
+                    {activity.description}
+                </Typography>
 
                 <Button
                     component={Link}
@@ -322,16 +419,20 @@ export default function ActivityCard({ activity }: Props) {
                         bgcolor: 'primary.main',
                         textTransform: 'none',
                         fontWeight: 600,
-                        px: 3,
+                        px: { xs: 2, md: 3 },
+                        py: { xs: 1, md: 1 },
+                        fontSize: { xs: '0.875rem', md: '0.938rem' },
+                        width: { xs: 'auto', md: 'auto' },
                         boxShadow: 'none',
                         '&:hover': {
                             bgcolor: '#20787cff',
                             boxShadow: '0 4px 12px rgba(32, 167, 172, 0.3)',
-                            transform: 'translateY(-1px)',
+                            transform: { xs: 'none', md: 'translateY(-1px)' },
                         },
                         transition: 'all 0.2s ease',
                     }}
                 >
+                    <Visibility sx={{ mr: 1, fontSize: '1.3rem' }} />
                     View Details
                 </Button>
             </CardActions>

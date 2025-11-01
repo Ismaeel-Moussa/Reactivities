@@ -2,7 +2,7 @@ import { useParams } from 'react-router';
 import { useProfile } from '../../lib/hooks/useProfile';
 import { Box, Divider, Grid, Typography, Skeleton } from '@mui/material';
 import ProfileCard from './ProfileCard';
-import { People, PersonOff } from '@mui/icons-material';
+import { PersonOff } from '@mui/icons-material';
 
 type Props = {
     activeTab: number;
@@ -27,7 +27,11 @@ export default function ProfileFollowings({ activeTab }: Props) {
         <Box>
             {/* Header */}
             <Box display="flex" alignItems="center" gap={1} mb={2}>
-                <Typography variant="h5" fontWeight={700}>
+                <Typography
+                    variant="h5"
+                    fontWeight={700}
+                    sx={{ fontSize: { xs: '1.25rem', md: '1.5rem' } }}
+                >
                     {title}
                 </Typography>
             </Box>
@@ -36,9 +40,9 @@ export default function ProfileFollowings({ activeTab }: Props) {
 
             {/* Loading State */}
             {loadingFollowings && (
-                <Grid container spacing={2}>
+                <Grid container spacing={{ xs: 1.5, sm: 2 }}>
                     {[1, 2, 3, 4].map((item) => (
-                        <Grid size={3} key={item}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item}>
                             <Box
                                 sx={{
                                     border: '1px solid',
@@ -78,13 +82,13 @@ export default function ProfileFollowings({ activeTab }: Props) {
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        py: 8,
+                        py: { xs: 4, md: 8 },
                         px: 2,
                     }}
                 >
                     <PersonOff
                         sx={{
-                            fontSize: 64,
+                            fontSize: { xs: 48, md: 64 },
                             color: 'text.secondary',
                             mb: 2,
                             opacity: 0.5,
@@ -94,12 +98,17 @@ export default function ProfileFollowings({ activeTab }: Props) {
                         variant="h6"
                         color="text.secondary"
                         gutterBottom
+                        sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}
                     >
                         {isFollowers
                             ? 'No followers yet'
                             : 'Not following anyone yet'}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ fontSize: { xs: '0.8rem', md: '0.875rem' } }}
+                    >
                         {isFollowers
                             ? 'Be the first to follow!'
                             : 'Start connecting with people'}
@@ -111,7 +120,7 @@ export default function ProfileFollowings({ activeTab }: Props) {
             {!loadingFollowings && followings && followings.length > 0 && (
                 <Box
                     sx={{
-                        maxHeight: 430,
+                        maxHeight: { xs: 500, md: 430 },
                         overflow: 'auto',
                         pr: 1,
                         '&::-webkit-scrollbar': {
@@ -130,9 +139,12 @@ export default function ProfileFollowings({ activeTab }: Props) {
                         },
                     }}
                 >
-                    <Grid container spacing={2} pb={1}>
+                    <Grid container spacing={{ xs: 1.5, sm: 2 }} pb={1}>
                         {followings.map((profile) => (
-                            <Grid size={3} key={profile.id}>
+                            <Grid
+                                size={{ xs: 6, sm: 4, md: 3 }}
+                                key={profile.id}
+                            >
                                 <ProfileCard profile={profile} />
                             </Grid>
                         ))}

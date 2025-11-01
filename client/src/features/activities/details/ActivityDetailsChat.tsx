@@ -7,6 +7,9 @@ import {
     Avatar,
     CircularProgress,
     Paper,
+    Button,
+    useTheme,
+    useMediaQuery,
 } from '@mui/material';
 import ChatIcon from '@mui/icons-material/Chat';
 import { Link, useParams } from 'react-router';
@@ -24,6 +27,8 @@ const ActivityDetailsChat = observer(() => {
         reset,
         formState: { isSubmitting },
     } = useForm();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const AddComment = async (data: FieldValues) => {
         try {
@@ -49,8 +54,8 @@ const ActivityDetailsChat = observer(() => {
             elevation={3}
             sx={{
                 overflow: 'hidden',
-                borderRadius: 2,
-                mb: 3,
+                borderRadius: isMobile ? 2 : 2,
+                mb: isMobile ? 2 : 3,
             }}
         >
             {/* Header with gradient */}
@@ -59,16 +64,16 @@ const ActivityDetailsChat = observer(() => {
                     background:
                         'linear-gradient(135deg, #163273ff 0%, #1e3a5f 50%, #0d9488 100%)',
                     color: 'white',
-                    padding: 2.5,
+                    padding: isMobile ? 2 : 2.5,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 1.5,
+                    gap: isMobile ? 1 : 1.5,
                 }}
             >
-                <ChatIcon sx={{ fontSize: 28 }} />
+                <ChatIcon sx={{ fontSize: isMobile ? 24 : 28 }} />
                 <Typography
-                    variant="h6"
+                    variant={isMobile ? 'body1' : 'h6'}
                     sx={{
                         fontWeight: 600,
                         letterSpacing: 0.5,
@@ -78,13 +83,13 @@ const ActivityDetailsChat = observer(() => {
                 </Typography>
             </Box>
 
-            <CardContent sx={{ p: 3 }}>
+            <CardContent sx={{ p: isMobile ? 2 : 3 }}>
                 {/* Comments List */}
                 <Box
                     sx={{
-                        height: 370,
+                        height: isMobile ? 250 : 370,
                         overflow: 'auto',
-                        mb: 3,
+                        mb: isMobile ? 2 : 3,
                         pr: 1,
                         '&::-webkit-scrollbar': {
                             width: '8px',
@@ -110,9 +115,16 @@ const ActivityDetailsChat = observer(() => {
                                 justifyContent: 'center',
                                 height: '100%',
                                 color: 'text.secondary',
+                                px: 2,
                             }}
                         >
-                            <Typography variant="body2">
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    textAlign: 'center',
+                                    fontSize: isMobile ? '0.85rem' : '0.875rem',
+                                }}
+                            >
                                 No comments yet. Be the first to comment!
                             </Typography>
                         </Box>
@@ -123,14 +135,16 @@ const ActivityDetailsChat = observer(() => {
                                 elevation={0}
                                 sx={{
                                     display: 'flex',
-                                    p: 2,
-                                    mb: 2,
+                                    p: isMobile ? 1.5 : 2,
+                                    mb: isMobile ? 1.5 : 2,
                                     backgroundColor: 'action.hover',
                                     borderRadius: 2,
                                     transition: 'all 0.2s ease',
                                     '&:hover': {
                                         backgroundColor: 'action.selected',
-                                        transform: 'translateX(4px)',
+                                        transform: isMobile
+                                            ? 'none'
+                                            : 'translateX(4px)',
                                     },
                                 }}
                             >
@@ -140,9 +154,9 @@ const ActivityDetailsChat = observer(() => {
                                     src={comment.imageUrl}
                                     alt={comment.displayName}
                                     sx={{
-                                        mr: 2,
-                                        width: 44,
-                                        height: 44,
+                                        mr: isMobile ? 1.5 : 2,
+                                        width: isMobile ? 36 : 44,
+                                        height: isMobile ? 36 : 44,
                                         border: '2px solid',
                                         borderColor: 'primary.main',
                                         transition: 'transform 0.2s ease',
@@ -156,7 +170,7 @@ const ActivityDetailsChat = observer(() => {
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'baseline',
-                                            gap: 1.5,
+                                            gap: isMobile ? 1 : 1.5,
                                             mb: 0.5,
                                             flexWrap: 'wrap',
                                         }}
@@ -170,6 +184,9 @@ const ActivityDetailsChat = observer(() => {
                                                 textDecoration: 'none',
                                                 color: 'primary.main',
                                                 transition: 'color 0.2s ease',
+                                                fontSize: isMobile
+                                                    ? '0.85rem'
+                                                    : '0.875rem',
                                                 '&:hover': {
                                                     color: '#008793',
                                                     textDecoration: 'underline',
@@ -182,7 +199,9 @@ const ActivityDetailsChat = observer(() => {
                                             variant="caption"
                                             sx={{
                                                 color: 'text.secondary',
-                                                fontSize: '0.75rem',
+                                                fontSize: isMobile
+                                                    ? '0.7rem'
+                                                    : '0.75rem',
                                             }}
                                         >
                                             {timeAgo(comment.createdAt)}
@@ -195,6 +214,9 @@ const ActivityDetailsChat = observer(() => {
                                             wordBreak: 'break-word',
                                             lineHeight: 1.6,
                                             color: 'text.primary',
+                                            fontSize: isMobile
+                                                ? '0.85rem'
+                                                : '0.875rem',
                                         }}
                                     >
                                         {comment.body}
@@ -211,6 +233,9 @@ const ActivityDetailsChat = observer(() => {
                     onSubmit={handleSubmit(AddComment)}
                     sx={{
                         position: 'relative',
+                        display: 'flex',
+                        gap: isMobile ? 1 : 2,
+                        alignItems: 'flex-start',
                     }}
                 >
                     <TextField
@@ -218,29 +243,25 @@ const ActivityDetailsChat = observer(() => {
                         variant="outlined"
                         fullWidth
                         multiline
-                        rows={2}
-                        placeholder="Enter your comment (Enter to submit, SHIFT + Enter for new line)"
+                        rows={1}
+                        placeholder={
+                            isMobile
+                                ? 'Add a comment...'
+                                : 'Enter your comment...'
+                        }
                         onKeyDown={handleKeyPress}
                         disabled={isSubmitting}
                         slotProps={{
                             input: {
-                                endAdornment: isSubmitting ? (
-                                    <CircularProgress
-                                        size={24}
-                                        sx={{
-                                            color: 'primary.main',
-                                        }}
-                                    />
-                                ) : null,
                                 sx: {
                                     backgroundColor: 'background.paper',
+                                    fontSize: isMobile ? '0.9rem' : '1rem',
                                     '&:hover': {
                                         backgroundColor: 'background.paper',
                                     },
                                     '&.Mui-focused': {
                                         backgroundColor: 'background.paper',
                                     },
-                                    width: '99%',
                                 },
                             },
                         }}
@@ -256,17 +277,43 @@ const ActivityDetailsChat = observer(() => {
                             },
                         }}
                     />
-                    <Typography
-                        variant="caption"
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={isSubmitting}
                         sx={{
-                            display: 'block',
-                            mt: 0.5,
-                            color: 'text.secondary',
-                            fontSize: '0.8rem',
+                            px: isMobile ? 1 : 1,
+                            py: isMobile ? 1.6 : 1.25,
+                            borderRadius: 2,
+                            fontWeight: 600,
+                            textTransform: 'none',
+                            fontSize: isMobile ? '0.9rem' : '0.875rem',
+                            background:
+                                'linear-gradient(135deg, #0d9488 0%, #14b8a6 100%)',
+                            boxShadow: '0 4px 12px rgba(13, 148, 136, 0.4)',
+                            minWidth: isMobile ? 80 : 100,
+                            height: isMobile ? 'auto' : '56px',
+                            '&:hover': {
+                                background:
+                                    'linear-gradient(135deg, #0f766e 0%, #0d9488 100%)',
+                                transform: 'translateY(-2px)',
+                                boxShadow: '0 6px 16px rgba(13, 148, 136, 0.5)',
+                            },
+                            '&:disabled': {
+                                background: 'rgba(0, 0, 0, 0.12)',
+                            },
                         }}
                     >
-                        Press Enter to send • Shift + Enter for new line
-                    </Typography>
+                        {isSubmitting ? (
+                            <CircularProgress
+                                size={25}
+                                sx={{ color: 'white' }}
+                            />
+                        ) : (
+                            'Add'
+                        )}
+                    </Button>
                 </Box>
             </CardContent>
         </Card>

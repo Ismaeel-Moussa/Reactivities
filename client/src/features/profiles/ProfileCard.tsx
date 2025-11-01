@@ -22,8 +22,8 @@ export default function ProfileCard({ profile }: Props) {
         >
             <Card
                 sx={{
-                    borderRadius: 3,
-                    maxWidth: 280,
+                    borderRadius: { xs: 2, md: 3 },
+                    maxWidth: { xs: '100%', md: 280 },
                     border: '1px solid',
                     borderColor: 'divider',
                     overflow: 'hidden',
@@ -45,7 +45,7 @@ export default function ProfileCard({ profile }: Props) {
                 <Box
                     sx={{
                         position: 'relative',
-                        height: 200,
+                        height: { xs: 160, sm: 180, md: 200 },
                         overflow: 'hidden',
                         bgcolor: 'rgba(32, 167, 172, 0.05)',
                     }}
@@ -78,19 +78,20 @@ export default function ProfileCard({ profile }: Props) {
                     {/* Following Badge */}
                     {profile.following && (
                         <Chip
-                            icon={<VerifiedUser sx={{ fontSize: '1.1rem' }} />}
+                            icon={<VerifiedUser sx={{ fontSize: '1rem' }} />}
                             label="Following"
                             size="small"
                             sx={{
                                 position: 'absolute',
-                                top: 12,
-                                right: 12,
+                                top: { xs: 8, md: 12 },
+                                right: { xs: 8, md: 12 },
                                 bgcolor: 'rgba(255, 255, 255, 0.95)',
                                 backdropFilter: 'blur(8px)',
                                 fontWeight: 700,
                                 color: '#f59e0b',
                                 border: '2px solid',
                                 borderColor: '#f59e0b',
+                                fontSize: { xs: '0.7rem', md: '0.75rem' },
                                 '& .MuiChip-icon': {
                                     color: '#f59e0b',
                                 },
@@ -99,18 +100,21 @@ export default function ProfileCard({ profile }: Props) {
                     )}
                 </Box>
 
-                <CardContent sx={{ p: 2.5 }}>
-                    <Stack spacing={2}>
+                <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
+                    <Stack spacing={{ xs: 1.5, md: 2 }}>
                         {/* Name Section */}
                         <Box>
                             <Typography
                                 variant="h6"
                                 sx={{
                                     fontWeight: 700,
-                                    fontSize: '1.25rem',
+                                    fontSize: { xs: '1.1rem', md: '1.25rem' },
                                     mb: 0.5,
                                     color: 'text.primary',
                                     lineHeight: 1.3,
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
                                 }}
                             >
                                 {profile.displayName}
@@ -123,6 +127,10 @@ export default function ProfileCard({ profile }: Props) {
                                         textOverflow: 'ellipsis',
                                         overflow: 'hidden',
                                         whiteSpace: 'nowrap',
+                                        fontSize: {
+                                            xs: '0.8rem',
+                                            md: '0.875rem',
+                                        },
                                     }}
                                 >
                                     {profile.bio}
@@ -134,8 +142,8 @@ export default function ProfileCard({ profile }: Props) {
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: 1.5,
-                                p: 2,
+                                gap: { xs: 1, md: 1.5 },
+                                p: { xs: 1.5, md: 2 },
                                 borderRadius: 2,
                                 bgcolor: 'rgba(32, 167, 172, 0.08)',
                                 border: '1px solid rgba(32, 167, 172, 0.2)',
@@ -146,14 +154,20 @@ export default function ProfileCard({ profile }: Props) {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    width: 44,
-                                    height: 44,
+                                    width: { xs: 38, md: 44 },
+                                    height: { xs: 38, md: 44 },
                                     borderRadius: '50%',
                                     bgcolor: 'primary.main',
                                 }}
                             >
                                 <Person
-                                    sx={{ fontSize: '1.4rem', color: 'white' }}
+                                    sx={{
+                                        fontSize: {
+                                            xs: '1.2rem',
+                                            md: '1.4rem',
+                                        },
+                                        color: 'white',
+                                    }}
                                 />
                             </Box>
                             <Box>
@@ -163,6 +177,10 @@ export default function ProfileCard({ profile }: Props) {
                                         fontWeight: 700,
                                         color: 'primary.main',
                                         lineHeight: 1.1,
+                                        fontSize: {
+                                            xs: '1.25rem',
+                                            md: '1.5rem',
+                                        },
                                     }}
                                 >
                                     {profile.followersCount}
@@ -171,7 +189,10 @@ export default function ProfileCard({ profile }: Props) {
                                     variant="caption"
                                     sx={{
                                         color: 'text.secondary',
-                                        fontSize: '0.75rem',
+                                        fontSize: {
+                                            xs: '0.7rem',
+                                            md: '0.75rem',
+                                        },
                                         fontWeight: 500,
                                         textTransform: 'uppercase',
                                         letterSpacing: '0.5px',

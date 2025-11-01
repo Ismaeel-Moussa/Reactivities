@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { useParams } from 'react-router';
 import { useActivities } from '../../../lib/hooks/useActivities';
 import ActivityDetailsHeader from './ActivityDetailsHeader';
@@ -10,20 +10,27 @@ import ActivityDetailsSkeleton from './ActivityDetailsSkeleton';
 export default function ActivityDetailPage() {
     const { id } = useParams();
     const { activity, isLoadingActivity } = useActivities(id);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     if (isLoadingActivity) return <ActivityDetailsSkeleton />;
     if (!activity) return <Typography>Activity not found</Typography>;
 
     return (
-        <Grid container spacing={8}>
-            <Grid size={8}>
+        <Grid container spacing={isMobile ? 2 : 8}>
+            <Grid size={{ xs: 12, md: 8 }}>
                 <ActivityDetailsHeader activity={activity} />
                 <ActivityDetailsInfo activity={activity} />
-                <ActivityDetailsChat />
+                {!isMobile && <ActivityDetailsChat />}
             </Grid>
-            <Grid size={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
                 <ActivityDetailsSidebar activity={activity} />
             </Grid>
+            {isMobile && (
+                <Grid size={12}>
+                    <ActivityDetailsChat />
+                </Grid>
+            )}
         </Grid>
     );
 }

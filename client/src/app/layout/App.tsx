@@ -6,7 +6,6 @@ import HomePage from '../../features/home/HomePage';
 function App() {
     const location = useLocation();
     return (
-        // bgcolor: "#eee"
         <Box sx={{ minHeight: '100vh' }}>
             <ScrollRestoration />
             <CssBaseline />
@@ -15,7 +14,7 @@ function App() {
             ) : (
                 <>
                     <NavBar />
-                    <Container maxWidth="xl" sx={{ pt: 13 }}>
+                    <Container maxWidth="xl" sx={{ pt: { xs: 10, md: 13 } }}>
                         <Outlet />
                     </Container>
                 </>

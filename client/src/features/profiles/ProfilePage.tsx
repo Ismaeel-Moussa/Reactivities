@@ -12,7 +12,7 @@ export default function ProfilePage() {
     if (!profile) return <Typography>Profile not found</Typography>;
     return (
         <Grid>
-            <Grid>
+            <Grid sx={{ pb: 2 }}>
                 <ProfileHeader />
                 <ProfileContent />
             </Grid>

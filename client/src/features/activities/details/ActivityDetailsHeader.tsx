@@ -1,4 +1,12 @@
-import { Card, CardMedia, Box, Typography, Chip } from '@mui/material';
+import {
+    Card,
+    CardMedia,
+    Box,
+    Typography,
+    Chip,
+    useTheme,
+    useMediaQuery,
+} from '@mui/material';
 import { Link } from 'react-router';
 import { formatDate } from '../../../lib/util/util';
 import { useActivities } from '../../../lib/hooks/useActivities';
@@ -10,15 +18,18 @@ type Props = {
 
 export default function ActivityDetailsHeader({ activity }: Props) {
     const { updateAttendance } = useActivities(activity.id);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
         <Card
             sx={{
                 position: 'relative',
-                mb: 3,
+                mb: isMobile ? 2 : 3,
                 backgroundColor: 'transparent',
                 overflow: 'hidden',
-                borderRadius: 3,
+                borderRadius: isMobile ? 2 : 3,
                 boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
             }}
         >
@@ -26,13 +37,13 @@ export default function ActivityDetailsHeader({ activity }: Props) {
                 <Chip
                     sx={{
                         position: 'absolute',
-                        left: 24,
-                        top: 24,
+                        left: isMobile ? 12 : 24,
+                        top: isMobile ? 12 : 24,
                         zIndex: 1000,
                         fontWeight: 700,
-                        fontSize: '0.875rem',
-                        px: 2,
-                        py: 2.5,
+                        fontSize: isSmallMobile ? '0.75rem' : '0.875rem',
+                        px: isSmallMobile ? 1 : 2,
+                        py: isSmallMobile ? 1.5 : 2.5,
                     }}
                     color="error"
                     label="CANCELLED"
@@ -42,13 +53,13 @@ export default function ActivityDetailsHeader({ activity }: Props) {
             <Box sx={{ position: 'relative', overflow: 'hidden' }}>
                 <CardMedia
                     component="img"
-                    height="400"
+                    height={isMobile ? '250' : '400'}
                     image={`/images/categoryImages/${activity.category}.jpg`}
                     alt={`${activity.category} image`}
                     sx={{
                         transition: 'transform 0.3s ease',
                         '&:hover': {
-                            transform: 'scale(1.05)',
+                            transform: isMobile ? 'none' : 'scale(1.05)',
                         },
                     }}
                 />
@@ -74,38 +85,40 @@ export default function ActivityDetailsHeader({ activity }: Props) {
                         left: 0,
                         right: 0,
                         color: 'white',
-                        p: 4,
+                        p: isMobile ? 2 : 4,
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: 3,
+                        gap: isMobile ? 1.5 : 3,
                     }}
                 >
                     {/* Text Section */}
                     <Box>
                         <Typography
-                            variant="h3"
+                            variant={isMobile ? 'h5' : 'h3'}
                             sx={{
                                 fontWeight: 800,
-                                mb: 1,
+                                mb: isMobile ? 0.5 : 1,
                                 textShadow: '2px 2px 8px rgba(0,0,0,0.3)',
+                                lineHeight: 1.2,
                             }}
                         >
                             {activity.title}
                         </Typography>
                         <Typography
-                            variant="h6"
+                            variant={isMobile ? 'body2' : 'h6'}
                             sx={{
                                 opacity: 0.95,
-                                mb: 0.5,
+                                mb: isMobile ? 0.25 : 0.5,
                                 fontWeight: 500,
                             }}
                         >
                             {formatDate(activity.date)}
                         </Typography>
                         <Typography
-                            variant="body1"
+                            variant={isMobile ? 'caption' : 'body1'}
                             sx={{
                                 fontWeight: 400,
+                                display: 'block',
                             }}
                         >
                             Hosted by{' '}
@@ -127,116 +140,72 @@ export default function ActivityDetailsHeader({ activity }: Props) {
                             </Box>
                         </Typography>
                     </Box>
-                </Box>
-                {/* Buttons */}
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        bottom: 0,
-                        right: 0,
-                        color: 'white',
-                        p: 3,
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        gap: 3,
-                        width: '500px',
-                    }}
-                >
-                    {activity.isHost ? (
-                        <>
+
+                    {/* Buttons */}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            gap: isMobile ? 1 : 3,
+                            width: isMobile ? '100%' : '500px',
+                            ml: isMobile ? 0 : 'auto',
+                        }}
+                    >
+                        {activity.isHost ? (
+                            <>
+                                <StyledButton
+                                    shapeTheme="contained"
+                                    colorTheme={
+                                        activity.isCancelled
+                                            ? 'success'
+                                            : 'error'
+                                    }
+                                    onClick={() =>
+                                        updateAttendance.mutate(activity.id)
+                                    }
+                                    disabled={updateAttendance.isPending}
+                                    fullWidth={isMobile}
+                                >
+                                    {activity.isCancelled
+                                        ? 'Re-activate'
+                                        : 'Cancel Activity'}
+                                </StyledButton>
+                                <StyledButton
+                                    shapeTheme="contained"
+                                    colorTheme="primary"
+                                    component={Link as any}
+                                    to={`/manage/${activity.id}`}
+                                    disabled={activity.isCancelled}
+                                    fullWidth={isMobile}
+                                >
+                                    Manage Event
+                                </StyledButton>
+                            </>
+                        ) : (
                             <StyledButton
-                                variant="contained"
-                                color={
-                                    activity.isCancelled ? 'success' : 'error'
+                                shapeTheme="contained"
+                                colorTheme={
+                                    activity.isGoing ? 'warning' : 'primary'
                                 }
                                 onClick={() =>
                                     updateAttendance.mutate(activity.id)
                                 }
-                                disabled={updateAttendance.isPending}
+                                disabled={
+                                    updateAttendance.isPending ||
+                                    activity.isCancelled
+                                }
+                                fullWidth={isMobile}
                                 sx={{
-                                    px: 3,
-                                    py: 1.5,
-                                    color: 'white',
-                                    borderRadius: 2,
-                                    fontWeight: 600,
-                                    textTransform: 'none',
-                                    fontSize: '1rem',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                                    '&:hover': {
-                                        transform: 'translateY(-2px)',
-                                        boxShadow: '0 6px 16px rgba(0,0,0,0.4)',
-                                    },
+                                    px: isMobile ? 2 : 4,
                                 }}
                             >
-                                {activity.isCancelled
-                                    ? 'Re-activate Activity'
-                                    : 'Cancel Activity'}
+                                {activity.isGoing
+                                    ? 'Cancel Attendance'
+                                    : 'Join Activity'}
                             </StyledButton>
-                            <StyledButton
-                                variant="contained"
-                                color="primary"
-                                component={Link}
-                                to={`/manage/${activity.id}`}
-                                disabled={activity.isCancelled}
-                                sx={{
-                                    px: 3,
-                                    py: 1.5,
-                                    borderRadius: 2,
-                                    fontWeight: 600,
-                                    textTransform: 'none',
-                                    fontSize: '1rem',
-                                    background:
-                                        'linear-gradient(135deg, #0d9488 0%, #14b8a6 100%)',
-                                    boxShadow:
-                                        '0 4px 12px rgba(13, 148, 136, 0.4)',
-                                    '&:hover': {
-                                        background:
-                                            'linear-gradient(135deg, #0f766e 0%, #0d9488 100%)',
-                                        transform: 'translateY(-2px)',
-                                        boxShadow:
-                                            '0 6px 16px rgba(13, 148, 136, 0.5)',
-                                    },
-                                }}
-                            >
-                                Manage Event
-                            </StyledButton>
-                        </>
-                    ) : (
-                        <StyledButton
-                            variant="contained"
-                            color={activity.isGoing ? 'warning' : 'primary'}
-                            onClick={() => updateAttendance.mutate(activity.id)}
-                            disabled={
-                                updateAttendance.isPending ||
-                                activity.isCancelled
-                            }
-                            sx={{
-                                px: 4,
-                                py: 1.5,
-                                borderRadius: 2,
-                                color: 'white',
-                                fontWeight: 600,
-                                textTransform: 'none',
-                                fontSize: '1rem',
-                                background: activity.isGoing
-                                    ? 'linear-gradient(135deg, #902217ff 0%, #9d251aff 100%)'
-                                    : 'linear-gradient(135deg, #0d9488 0%, #14b8a6 100%)',
-                                boxShadow: activity.isGoing
-                                    ? '0 4px 12px rgba(245, 50, 11, 0.4)'
-                                    : '0 4px 12px rgba(13, 148, 136, 0.4)',
-                                '&:hover': {
-                                    transform: 'translateY(-2px)',
-                                    boxShadow: activity.isGoing
-                                        ? '0 6px 16px rgba(245, 50, 11, 0.5)'
-                                        : '0 6px 16px rgba(13, 148, 136, 0.5)',
-                                },
-                            }}
-                        >
-                            {activity.isGoing
-                                ? 'Cancel Attendance'
-                                : 'Join Activity'}
-                        </StyledButton>
-                    )}
+                        )}
+                    </Box>
                 </Box>
             </Box>
         </Card>

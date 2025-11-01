@@ -1,10 +1,14 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, type ButtonProps } from '@mui/material';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
-export default function DeleteButton() {
+
+type Props = ButtonProps;
+
+export default function DeleteButton({ ...rest }: Props) {
     return (
         <>
             <Box sx={{ position: 'relative' }}>
                 <Button
+                    {...rest}
                     sx={{
                         opacity: 0.8,
                         transition: 'opacity 0.3s',
@@ -14,9 +18,9 @@ export default function DeleteButton() {
                 >
                     <HighlightOffOutlinedIcon
                         sx={{
-                            fontSize: 28,
+                            fontSize: 35,
                             color: '#ff0000ff',
-                            bgcolor: 'white',
+                            bgcolor: '#ffffffbe',
                             borderRadius: '50%',
                         }}
                     />

@@ -84,7 +84,7 @@ export default function UserMenu() {
                     paper: {
                         elevation: 3,
                         sx: {
-                            minWidth: 220,
+                            minWidth: 250,
                             borderRadius: 2,
                             mt: 1.5,
                             border: '1px solid',
@@ -95,7 +95,7 @@ export default function UserMenu() {
                                 display: 'block',
                                 position: 'absolute',
                                 top: 0,
-                                right: 14,
+                                right: 20,
                                 width: 10,
                                 height: 10,
                                 bgcolor: 'background.paper',

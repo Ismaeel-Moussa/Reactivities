@@ -29,14 +29,17 @@ export default function LoginForm() {
     };
 
     return (
-        // 1. This new Box is the full-height centering container
         <Box
             sx={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: 'calc(100vh - 200px)',
-                py: 4,
+                minHeight: {
+                    xs: 'calc(100vh - 120px)',
+                    sm: 'calc(100vh - 200px)',
+                },
+                py: { xs: 2, sm: 4 },
+                px: { xs: 2, sm: 3 },
             }}
         >
             <Paper
@@ -45,22 +48,31 @@ export default function LoginForm() {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    p: 3,
-                    gap: 3,
+                    p: { xs: 2.5, sm: 3 },
+                    gap: { xs: 2, sm: 3 },
                     width: '100%',
-                    maxWidth: 800,
-                    borderRadius: 3,
+                    maxWidth: { xs: '100%', sm: 500, md: 800 },
+                    borderRadius: { xs: 2, sm: 3 },
+                    boxShadow: { xs: 2, sm: 3 },
                 }}
             >
                 <Box
                     display={'flex'}
                     alignItems={'center'}
                     justifyContent={'center'}
-                    gap={3}
+                    gap={{ xs: 1.5, sm: 3 }}
                     color={'secondary.main'}
                 >
-                    <LockOpen fontSize="large" color="primary" />
-                    <Typography variant="h4" color="primary">
+                    <LockOpen
+                        fontSize="large"
+                        color="primary"
+                        sx={{ fontSize: { xs: 32, sm: 40 } }}
+                    />
+                    <Typography
+                        variant="h4"
+                        color="primary"
+                        sx={{ fontSize: { xs: '1.75rem', sm: '2.125rem' } }}
+                    >
                         Sign in
                     </Typography>
                 </Box>
@@ -76,16 +88,33 @@ export default function LoginForm() {
                     disabled={!isValid || isSubmitting}
                     variant="contained"
                     size="large"
+                    sx={{
+                        height: { xs: 48, sm: 56 },
+                        fontSize: { xs: '0.95rem', sm: '1.05rem' },
+                        fontWeight: 600,
+                    }}
                 >
-                    Login
+                    {isSubmitting ? 'Signing in...' : 'Login'}
                 </Button>
-                <Typography sx={{ textAlign: 'center' }}>
+                <Typography
+                    sx={{
+                        textAlign: 'center',
+                        fontSize: { xs: '0.9rem', sm: '1rem' },
+                    }}
+                >
                     Don't have an account?
                     <Typography
                         component={Link}
                         to="/register"
                         color="primary"
-                        sx={{ ml: 1, textDecoration: 'none' }}
+                        sx={{
+                            ml: 1,
+                            textDecoration: 'none',
+                            fontWeight: 600,
+                            '&:hover': {
+                                textDecoration: 'underline',
+                            },
+                        }}
                     >
                         Sign up
                     </Typography>

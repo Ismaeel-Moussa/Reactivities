@@ -50,12 +50,16 @@ export default function ProfileActivities() {
                 <Tabs
                     value={activeTab}
                     onChange={handleTabChange}
+                    variant="scrollable"
+                    scrollButtons="auto"
                     sx={{
                         '& .MuiTab-root': {
                             textTransform: 'none',
                             fontWeight: 600,
-                            fontSize: '0.95rem',
+                            fontSize: { xs: '0.85rem', md: '0.95rem' },
                             minHeight: 48,
+                            minWidth: { xs: 110, md: 'auto' },
+                            px: { xs: 1.5, md: 2 },
                         },
                         '& .Mui-selected': {
                             color: '#28969c',
@@ -72,6 +76,12 @@ export default function ProfileActivities() {
                             key={tab.key}
                             icon={tab.icon}
                             iconPosition="start"
+                            sx={{
+                                '& .MuiTab-iconWrapper': {
+                                    marginRight: { xs: 0.5, md: 1 },
+                                    marginBottom: 0,
+                                },
+                            }}
                         />
                     ))}
                 </Tabs>
@@ -79,9 +89,9 @@ export default function ProfileActivities() {
 
             {/* Loading State */}
             {loadingUserActivities && (
-                <Grid container spacing={2}>
+                <Grid container spacing={{ xs: 1.5, sm: 2 }}>
                     {[1, 2, 3, 4].map((item) => (
-                        <Grid size={3} key={item}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item}>
                             <Card>
                                 <Skeleton variant="rectangular" height={140} />
                                 <CardContent>
@@ -103,13 +113,13 @@ export default function ProfileActivities() {
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            py: 8,
+                            py: { xs: 4, md: 8 },
                             px: 2,
                         }}
                     >
                         <EventBusy
                             sx={{
-                                fontSize: 64,
+                                fontSize: { xs: 48, md: 64 },
                                 color: 'text.secondary',
                                 mb: 2,
                                 opacity: 0.5,
@@ -119,10 +129,15 @@ export default function ProfileActivities() {
                             variant="h6"
                             color="text.secondary"
                             gutterBottom
+                            sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}
                         >
                             No activities to show
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: { xs: '0.8rem', md: '0.875rem' } }}
+                        >
                             Check back later for upcoming events
                         </Typography>
                     </Box>
@@ -131,9 +146,9 @@ export default function ProfileActivities() {
             {/* Activities Grid */}
             <Box
                 sx={{
-                    maxHeight: 395,
+                    maxHeight: { xs: 500, md: 395 },
                     overflow: 'auto',
-                    pr: 2,
+                    pr: { xs: 1, md: 2 },
                     '&::-webkit-scrollbar': {
                         width: '8px',
                     },
@@ -150,16 +165,19 @@ export default function ProfileActivities() {
                     },
                 }}
             >
-                <Grid container spacing={2}>
+                <Grid container spacing={{ xs: 1.5, sm: 2 }}>
                     {userActivities &&
                         userActivities.map((activity: Activity) => (
-                            <Grid size={3} key={activity.id}>
+                            <Grid
+                                size={{ xs: 12, sm: 6, md: 3 }}
+                                key={activity.id}
+                            >
                                 <Link
                                     to={`/activities/${activity.id}`}
                                     style={{ textDecoration: 'none' }}
                                 >
                                     <Card
-                                        elevation={0.8}
+                                        elevation={1}
                                         sx={{
                                             height: '100%',
                                             border: '1px solid',
@@ -198,13 +216,18 @@ export default function ProfileActivities() {
                                                     ),
                                                     color: '#28969c',
                                                     fontWeight: 700,
-                                                    fontSize: '0.7rem',
+                                                    fontSize: {
+                                                        xs: '0.65rem',
+                                                        md: '0.7rem',
+                                                    },
                                                     textTransform: 'uppercase',
                                                     backdropFilter: 'blur(4px)',
                                                 }}
                                             />
                                         </Box>
-                                        <CardContent>
+                                        <CardContent
+                                            sx={{ p: { xs: 1.5, md: 2 } }}
+                                        >
                                             <Typography
                                                 variant="h6"
                                                 sx={{
@@ -212,7 +235,10 @@ export default function ProfileActivities() {
                                                     overflow: 'hidden',
                                                     whiteSpace: 'nowrap',
                                                     fontWeight: 700,
-                                                    fontSize: '1rem',
+                                                    fontSize: {
+                                                        xs: '0.9rem',
+                                                        md: '1rem',
+                                                    },
                                                     mb: 1,
                                                     color: 'text.primary',
                                                 }}
@@ -235,6 +261,10 @@ export default function ProfileActivities() {
                                                     sx={{
                                                         color: 'text.secondary',
                                                         fontWeight: 500,
+                                                        fontSize: {
+                                                            xs: '0.8rem',
+                                                            md: '0.875rem',
+                                                        },
                                                     }}
                                                 >
                                                     {formatDate(activity.date)}
