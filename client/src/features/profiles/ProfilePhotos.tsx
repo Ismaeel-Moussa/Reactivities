@@ -33,7 +33,7 @@ export default function ProfilePhotos() {
     const [editMode, setEditMode] = useState(false);
     const [hoveredPhoto, setHoveredPhoto] = useState<string | null>(null);
     const theme = useTheme();
-    const isSx = useMediaQuery(theme.breakpoints.down('sm'));
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
 
     const handlePhotoUpload = (file: Blob) => {
@@ -59,7 +59,7 @@ export default function ProfilePhotos() {
                     <Skeleton width={120} height={40} />
                 </Box>
                 <ImageList
-                    cols={isSx ? 2 : isSm ? 3 : 4}
+                    cols={isXs ? 2 : isSm ? 3 : 4}
                     rowHeight={220}
                     gap={12}
                 >
@@ -121,7 +121,7 @@ export default function ProfilePhotos() {
                         onClick={() => setEditMode(!editMode)}
                         variant={editMode ? 'outlined' : 'contained'}
                         startIcon={<AddPhotoAlternate />}
-                        fullWidth={isSx ? true : false}
+                        fullWidth={isXs ? true : false}
                         sx={{
                             textTransform: 'none',
                             fontWeight: 600,
@@ -246,9 +246,9 @@ export default function ProfilePhotos() {
                             }}
                         >
                             <ImageList
-                                cols={isSx ? 2 : isSm ? 3 : 5}
-                                rowHeight={isSx ? 180 : 240}
-                                gap={isSx ? 8 : 12}
+                                cols={isXs ? 2 : isSm ? 3 : 5}
+                                rowHeight={isXs ? 180 : 240}
+                                gap={isXs ? 8 : 12}
                             >
                                 {photos.map((photo) => (
                                     <ImageListItem

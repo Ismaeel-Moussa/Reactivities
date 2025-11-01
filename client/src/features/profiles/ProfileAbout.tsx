@@ -19,7 +19,7 @@ export default function ProfileAbout() {
     const { profile, isCurrentUser } = useProfile(id);
     const [editMode, setEditMode] = useState(false);
     const theme = useTheme();
-    const isSx = useMediaQuery(theme.breakpoints.down('sm'));
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     return (
         <Box>
             {/* Header */}
@@ -45,7 +45,7 @@ export default function ProfileAbout() {
                         onClick={() => setEditMode(!editMode)}
                         variant={editMode ? 'outlined' : 'contained'}
                         startIcon={<Edit />}
-                        fullWidth={isSx ? true : false}
+                        fullWidth={isXs ? true : false}
                         sx={{
                             textTransform: 'none',
                             fontWeight: 600,

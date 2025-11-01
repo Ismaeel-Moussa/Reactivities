@@ -4,6 +4,8 @@ import {
     Paper,
     Typography,
     CircularProgress,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import { useActivities } from '../../../lib/hooks/useActivities';
 import { useNavigate, useParams } from 'react-router';
@@ -42,6 +44,8 @@ export default function ActivityForm() {
     const { id } = useParams();
     const { updateActivity, createActivity, activity, isLoadingActivity } =
         useActivities(id);
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         if (activity)
@@ -172,7 +176,7 @@ export default function ActivityForm() {
                         control={control as any}
                         name="description"
                         multiline
-                        rows={{ xs: 3, sm: 4 }}
+                        rows={isXs ? 3 : 4}
                     />
 
                     {/* Category and Date - Stack on mobile */}
