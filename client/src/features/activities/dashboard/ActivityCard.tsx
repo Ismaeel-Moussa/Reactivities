@@ -115,8 +115,8 @@ export default function ActivityCard({ activity }: Props) {
                         to={`/profiles/${activity.hostId}`}
                         sx={{
                             mb: { xs: 1 },
-                            width: { xs: 50, md: 60 },
-                            height: { xs: 50, md: 60 },
+                            width: { xs: 60, md: 70 },
+                            height: { xs: 60, md: 70 },
                             transition: 'transform 0.2s ease',
                             border: '3px solid',
                             borderColor: 'primary.main',
@@ -336,9 +336,12 @@ export default function ActivityCard({ activity }: Props) {
                                     profile={attendee}
                                     key={attendee.id}
                                     sx={{
-                                        width: { xs: 40, md: 50 },
-                                        height: { xs: 40, md: 50 },
+                                        width: { xs: 45, md: 55 },
+                                        height: { xs: 45, md: 55 },
                                         flexShrink: 0,
+                                        border: attendee.following
+                                            ? '2px solid #f59e0b'
+                                            : null,
                                     }}
                                 />
                             ))}
