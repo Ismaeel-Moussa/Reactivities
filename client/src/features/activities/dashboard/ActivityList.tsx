@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
 import ActivityCard from './ActivityCard';
 import { useActivities } from '../../../lib/hooks/useActivities';
 import { useInView } from 'react-intersection-observer';
@@ -9,8 +9,12 @@ import ActivityCardSkeleton from './ActivityCardSkeleton';
 const ActivityList = observer(() => {
     const { activitiesGroup, isLoading, hasNextPage, fetchNextPage } =
         useActivities();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
     const { ref, inView } = useInView({
-        threshold: 0.5,
+        threshold: isMobile ? 0 : 0.5,
+        rootMargin: isMobile ? '200px' : '100px',
     });
 
     useEffect(() => {
@@ -36,6 +40,8 @@ const ActivityList = observer(() => {
 
     if (!activitiesGroup) return <Typography>No activities found</Typography>;
 
+    const allActivities = activitiesGroup.pages.flatMap((page) => page.items);
+
     return (
         <Box
             sx={{
@@ -44,20 +50,12 @@ const ActivityList = observer(() => {
                 gap: 1,
             }}
         >
-            {activitiesGroup.pages.map((activities, index) => (
+            {allActivities.map((activity, index) => (
                 <Box
-                    key={index}
-                    ref={
-                        index === activitiesGroup.pages.length - 1 ? ref : null
-                    }
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                    }}
+                    key={activity.id}
+                    ref={index === allActivities.length - 1 ? ref : null}
                 >
-                    {activities.items.map((activity) => (
-                        <ActivityCard key={activity.id} activity={activity} />
-                    ))}
+                    <ActivityCard activity={activity} />
                 </Box>
             ))}
         </Box>

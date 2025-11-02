@@ -58,7 +58,7 @@ export default function ActivityDashboard() {
                     '& .MuiDrawer-paper': {
                         borderTopLeftRadius: 24,
                         borderTopRightRadius: 24,
-                        maxHeight: '85vh',
+                        maxHeight: '50vh',
                         overflow: 'auto',
                     },
                 }}

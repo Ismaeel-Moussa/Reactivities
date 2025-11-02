@@ -103,8 +103,6 @@ export default function ActivityDetailsSidebar({ activity }: Props) {
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: isMobile ? 2 : 2.5,
-                        flexDirection:
-                            isMobile && attendees.length > 9 ? 'column' : 'row',
                     }}
                 >
                     {attendees.length === 1 ? (

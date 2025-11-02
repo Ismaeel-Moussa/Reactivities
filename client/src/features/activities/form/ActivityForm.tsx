@@ -217,7 +217,7 @@ export default function ActivityForm() {
                         mt={{ xs: 1, sm: 2 }}
                     >
                         <Button
-                            color="inherit"
+                            variant="outlined"
                             onClick={() => navigate(-1)}
                             fullWidth={true}
                             sx={{
