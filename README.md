@@ -2,7 +2,11 @@
 
 A full-stack social networking application designed to facilitate the creation, discovery, and management of social events. This project serves as a comprehensive demonstration of modern web development practices, featuring a robust backend built with .NET and a dynamic, responsive frontend using React.
 
+Demo Credentials
+Email: ismaeel.moussa@test.com
+Password: Pa$$w0rd
 **🌐 [Live Demo](https://reactivities-website.azurewebsites.net)** : https://reactivities-website.azurewebsites.net
+
 
 ---
 
